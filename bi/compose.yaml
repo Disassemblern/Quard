@@ -1,0 +1,24 @@
+# Postgres for the BI work. Local use only: the password is fixed.
+#   docker compose -f bi/compose.yaml up -d
+name: quard-bi
+
+services:
+    postgres:
+        image: postgres:18
+        environment:
+            POSTGRES_USER: quard
+            POSTGRES_PASSWORD: quard
+            POSTGRES_DB: quard
+        ports:
+            # 5433, so it never clashes with the PGlite dev server on 5432
+            - "127.0.0.1:5433:5432"
+        volumes:
+            - postgres-data:/var/lib/postgresql
+        healthcheck:
+            test: ["CMD-SHELL", "pg_isready -U quard -d quard"]
+            interval: 5s
+            timeout: 3s
+            retries: 10
+
+volumes:
+    postgres-data:

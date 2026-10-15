@@ -1,0 +1,19 @@
+[project]
+name = "quard-bi"
+version = "0.0.0"
+requires-python = ">=3.13"
+dependencies = ["psycopg[binary]"]
+
+[dependency-groups]
+dev = ["pytest", "pytest-cov", "ruff"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "--cov=. --cov-report=term-missing --cov-fail-under=100"
+markers = ["live: needs LIVE_DATABASE_URL, the demo database"]
+
+[tool.coverage.run]
+omit = ["tests/*"]
+
+[tool.ruff]
+line-length = 120

@@ -3,8 +3,8 @@ import { defineConfig, globalIgnores } from "eslint/config";
 import tseslint from "typescript-eslint";
 
 export default defineConfig([
-    // web/ and docs/ have their own ESLint setup
-    globalIgnores(["**/node_modules/**", "**/dist/**", "**/coverage/**", "web/**", "docs/**"]),
+    // web/ and docs/ have their own ESLint setup; bi/ is Python and SQL
+    globalIgnores(["**/node_modules/**", "**/dist/**", "**/coverage/**", "web/**", "docs/**", "bi/**"]),
     js.configs.recommended,
     tseslint.configs.recommended,
     {

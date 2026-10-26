@@ -7,6 +7,8 @@ on:
         paths: ["bi/**", "db/migrations/**", ".github/workflows/bi.yml"]
     pull_request:
         paths: ["bi/**", "db/migrations/**", ".github/workflows/bi.yml"]
+    # Run by hand: Actions > BI > Run workflow, or gh workflow run BI
+    workflow_dispatch:
 
 jobs:
     sql:

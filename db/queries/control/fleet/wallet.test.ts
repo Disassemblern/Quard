@@ -31,7 +31,7 @@ describe("the fleet check with wallets", () => {
         const projectId = await createProject(test.db, "Acme");
         await pay(projectId, 1, 4);
 
-        expect(await listWatched(test.db, projectId)).toEqual([
+        expect(await listWatched(test.db, projectId, after(1))).toEqual([
             expect.objectContaining({
                 kind: "wallet",
                 field: "payTo",

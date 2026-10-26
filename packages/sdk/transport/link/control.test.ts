@@ -2,7 +2,7 @@ import { hostname } from "node:os";
 import { helloMessage } from "@quard/shared";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { registerGuardedTool } from "../../context/registry.ts";
-import { dayUsed } from "../../guards/limit/daily.ts";
+import { dayUsed, utcDay } from "../../guards/limit/daily.ts";
 import { rememberVersion, type AgentVersion } from "../../monitor/versions.ts";
 import { rulesSnapshot } from "../../policy/rules.ts";
 import { fakeSockets, READY, sentOf } from "../../test/fake-socket.ts";
@@ -64,10 +64,10 @@ describe("createControl", () => {
 
         const socket = fake.connect({
             ...READY,
-            counters: [{ tool: "payInvoice", counter: "calls", day: "2026-10-03", used: 4 }],
+            counters: [{ tool: "payInvoice", counter: "calls", day: utcDay(), used: 4 }],
         });
 
-        expect(dayUsed("2026-10-03", "payInvoice", "calls")).toBe(4);
+        expect(dayUsed(utcDay(), "payInvoice", "calls")).toBe(4);
         expect(sentOf(socket, "agent")).toEqual([
             {
                 type: "agent",

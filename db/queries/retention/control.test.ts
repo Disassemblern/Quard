@@ -32,7 +32,9 @@ async function sweepOf(): Promise<Sweep> {
 describe("deleteDayCounters", () => {
     it("keeps today and the two days before", async () => {
         const sweep = await sweepOf();
-        const days = ["2026-10-04", "2026-10-02", "2026-10-01", "2026-09-01"];
+        // The UTC day `n` days before NOW
+        const dayBefore = (n: number) => daysBefore(n).toISOString().slice(0, 10);
+        const days = [dayBefore(0), dayBefore(2), dayBefore(3), dayBefore(33)];
         await test.db
             .insertInto("day_counters")
             .values(days.map((day) => ({ project_id: sweep.projectId, day, tool: "payInvoice", counter: "calls" })))
@@ -45,7 +47,7 @@ describe("deleteDayCounters", () => {
             .where("project_id", "=", sweep.projectId)
             .orderBy("day")
             .execute();
-        expect(left.map((row) => row.day)).toEqual(["2026-10-02", "2026-10-04"]);
+        expect(left.map((row) => row.day)).toEqual([dayBefore(2), dayBefore(0)]);
     });
 });
 

@@ -1,7 +1,8 @@
 import type { Db } from "../connect/connect.ts";
 
-// The time every retention test runs at
-export const NOW = new Date("2026-10-04T12:00:00.000Z");
+// The time every retention test runs at. The real clock, so a run made
+// days ago is that old for code that reads the clock too.
+export const NOW = new Date();
 
 const DAY = 24 * 60 * 60_000;
 

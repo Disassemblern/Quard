@@ -8,13 +8,13 @@ export type Check = { tool: string; ms: number };
 type Tool = (input: never) => Promise<string>;
 
 // Our own records: trusted
-const SUPPLIERS: Record<string, string> = {
+export const SUPPLIERS: Record<string, string> = {
     globex: "Globex Corporation. IBAN: DE89 3704 0044 0532 0130 00. Billing: billing@globex.com",
     initech: "Initech GmbH. IBAN: DE02 1203 0000 0000 2020 51. Billing: accounts@initech.de",
 };
 
 // Internal data
-const CUSTOMERS = [
+export const CUSTOMERS = [
     "Jane Roe <jane.roe@gmail.com>",
     "Max Mustermann <max@web.de>",
     "Ana Silva <ana.silva@outlook.com>",

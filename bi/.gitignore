@@ -3,3 +3,6 @@ __pycache__/
 .pytest_cache/
 .ruff_cache/
 .coverage
+
+# Demo database dumps, too big for Git
+data/

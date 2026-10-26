@@ -1,0 +1,29 @@
+{
+    "version": 1,
+    "strictness": "balanced",
+    "signatures": { "file": "../playground/signatures.json", "mode": "block" },
+    "detector": { "mode": "enforce", "flagAt": 0.5, "stripAt": 0.9 },
+    "runLimits": { "mode": "observe", "steps": 7 },
+    "guards": {
+        "readEmail": [{ "type": "source", "origin": "email" }],
+        "fetchPage": [{ "type": "source", "origin": "web" }],
+        "getSupplier": [{ "type": "limit", "maxCallsPerRun": 5 }],
+        "getCustomers": [{ "type": "limit", "maxCallsPerRun": 2 }],
+        "payInvoice": [
+            {
+                "type": "action",
+                "rules": [
+                    { "field": "iban", "from": ["tool:getSupplier"] },
+                    { "field": "amount", "max": 5000 }
+                ]
+            }
+        ],
+        "sendEmail": [
+            {
+                "type": "egress",
+                "allow": ["*.acme.com"],
+                "payload": { "secrets": "block", "cards": "block", "ibans": "mask" }
+            }
+        ]
+    }
+}

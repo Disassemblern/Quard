@@ -80,6 +80,13 @@ describe("reviewedChunks", () => {
         const second = sure("article", 0.8, "2026-10-03T12:00:02.000Z");
         await ingestBatch(test.db, projectId, [item(started()), first, second]);
         await reviewChunk(test.db, projectId, first.id, "invoice", "@dana-k");
+        // Two reviews in a row can get the same clock time in PGlite
+        await test.db
+            .updateTable("chunk_labels")
+            .set({ reviewed_at: new Date("2026-10-03T12:00:00.000Z") })
+            .where("project_id", "=", projectId)
+            .where("event_id", "=", first.id)
+            .execute();
         await reviewChunk(test.db, projectId, second.id, "promotion", "sam@acme.com");
 
         const reviewed = await reviewedChunks(test.db, projectId);

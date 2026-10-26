@@ -48,4 +48,22 @@ A panel n columns wide is n x 104 - 16 px: 192, 296, 400, 608, 816 or 1232. Colu
 
 ## Findings
 
+### Back-dating
+
+The generator made all 14,289 runs in 22 minutes on one day. [seed/backdate.sql](seed/backdate.sql) spreads them over the last 6 months:
+
+| Month | Runs |
+| --- | --- |
+| April 2026 | 2 |
+| May 2026 | 489 |
+| June 2026 | 1,308 |
+| July 2026 | 2,231 |
+| August 2026 | 3,040 |
+| September 2026 | 3,691 |
+| October 2026 (to the 23rd) | 3,528 |
+
+11% of runs fall on a weekend and 94% between 08:00 and 17:59 UTC. Every timestamp of a run moved by the same amount, so no event, step or incident falls outside its run.
+
+On Windows, psycopg hangs on `localhost`: it tries `::1` first, and Docker publishes the port on `127.0.0.1` only. The database URLs in `.env.example` use `127.0.0.1`.
+
 ## Next

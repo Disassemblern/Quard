@@ -9,6 +9,7 @@ dev = ["pytest", "pytest-cov", "ruff"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+pythonpath = ["."]
 addopts = "--cov=. --cov-report=term-missing --cov-fail-under=100"
 markers = ["live: needs LIVE_DATABASE_URL, the demo database"]
 

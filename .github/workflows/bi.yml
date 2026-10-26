@@ -27,6 +27,8 @@ jobs:
                     --health-retries 10
         env:
             TEST_DATABASE_URL: postgres://quard:quard@127.0.0.1:5432/postgres
+            # Lets the tests sign in as bi_reader
+            BI_READER_PASSWORD: ci-only
         steps:
             - uses: actions/checkout@v5
             - uses: astral-sh/setup-uv@v6

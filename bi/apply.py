@@ -10,6 +10,7 @@ import sys
 from pathlib import Path
 
 import psycopg
+from psycopg import sql
 
 HERE = Path(__file__).resolve().parent
 SQL_DIR = HERE / "sql"
@@ -37,6 +38,10 @@ def rebuild(conn: psycopg.Connection, folder: Path = SQL_DIR) -> list[str]:
         conn.execute("DROP SCHEMA IF EXISTS bi CASCADE")
         for path in files:
             conn.execute(path.read_text(encoding="utf-8"))
+        # ALTER ROLE takes no query parameters, so the password is a literal
+        password = os.environ.get("BI_READER_PASSWORD")
+        if password:
+            conn.execute(sql.SQL("ALTER ROLE bi_reader PASSWORD {}").format(sql.Literal(password)))
     return [path.name for path in files]
 
 

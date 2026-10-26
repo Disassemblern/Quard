@@ -66,4 +66,23 @@ The generator made all 14,289 runs in 22 minutes on one day. [seed/backdate.sql]
 
 On Windows, psycopg hangs on `localhost`: it tries `::1` first, and Docker publishes the port on `127.0.0.1` only. The database URLs in `.env.example` use `127.0.0.1`.
 
+### Star schema
+
+The [sql](sql) folder builds the `bi` views. On the demo data each fact has exactly as many rows as its source table, and every fact key is in its dimension.
+
+| Fact | Rows |
+| --- | --- |
+| Runs | 14,289 |
+| Model calls | 45,836 |
+| Tool calls | 33,712 |
+| Decisions | 137,796 |
+| Incidents | 4,093 |
+| Payments | 13,602 |
+
+The dimensions are small: 5 agents, 5 models, 10 tools and 16 guard rules. `acme-ft-1` is the one model with no price.
+
+273 incidents have no verdict yet, so their category is `unknown` and they have no entry origin.
+
+Power BI signs in as `bi_reader`, which can read the `bi` views and nothing in `public`.
+
 ## Next

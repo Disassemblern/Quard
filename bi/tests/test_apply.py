@@ -46,6 +46,25 @@ def test_broken_file_keeps_the_old_schema(conn, sql_dir):
     assert conn.execute("SELECT n FROM bi.v").fetchone()[0] == 0
 
 
+def reader_password(conn: psycopg.Connection) -> str | None:
+    return conn.execute("SELECT rolpassword FROM pg_authid WHERE rolname = 'bi_reader'").fetchone()[0]
+
+
+def test_rebuild_sets_the_reader_password(conn, sql_dir, monkeypatch):
+    # A quote proves the password goes in as a literal
+    before = reader_password(conn)
+    monkeypatch.setenv("BI_READER_PASSWORD", "it's a test")
+    apply.rebuild(conn, sql_dir)
+    assert reader_password(conn) not in (None, before)
+
+
+def test_rebuild_without_a_password_leaves_it(conn, sql_dir, monkeypatch):
+    before = reader_password(conn)
+    monkeypatch.setenv("BI_READER_PASSWORD", "")
+    apply.rebuild(conn, sql_dir)
+    assert reader_password(conn) == before
+
+
 def test_drop(conn, sql_dir):
     apply.rebuild(conn, sql_dir)
     apply.drop(conn)
@@ -75,17 +94,18 @@ def test_main_rebuilds_runs_a_file_and_drops(own_database, tmp_path, monkeypatch
     monkeypatch.setenv("DATABASE_URL", own_database)
     script = write(tmp_path, "one.sql", "CREATE SCHEMA bi; CREATE TABLE bi.t (id int);")
 
+    # The new database has the bi schema already
+    assert apply.main(["--drop"]) == 0
+    with psycopg.connect(own_database) as conn:
+        assert not has_bi_schema(conn)
+    assert capsys.readouterr().out.splitlines()[-1] == "Dropped the bi schema."
+
     assert apply.main([str(script)]) == 0
     with psycopg.connect(own_database) as conn:
         assert has_bi_schema(conn)
 
     assert apply.main([]) == 0
     assert "Rebuilt the bi schema from" in capsys.readouterr().out
-
-    assert apply.main(["--drop"]) == 0
-    with psycopg.connect(own_database) as conn:
-        assert not has_bi_schema(conn)
-    assert capsys.readouterr().out.splitlines()[-1] == "Dropped the bi schema."
 
 
 def test_main_needs_database_url(monkeypatch, capsys):

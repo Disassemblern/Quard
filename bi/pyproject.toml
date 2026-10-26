@@ -10,7 +10,8 @@ dev = ["pytest", "pytest-cov", "ruff"]
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 pythonpath = ["."]
-addopts = "--cov=. --cov-report=term-missing --cov-fail-under=100"
+# Live checks need the demo data: run them with -m live --no-cov
+addopts = "--cov=. --cov-report=term-missing --cov-fail-under=100 -m 'not live'"
 markers = ["live: needs LIVE_DATABASE_URL, the demo database"]
 
 [tool.coverage.run]

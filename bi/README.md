@@ -44,6 +44,32 @@ A panel n columns wide is n x 104 - 16 px: 192, 296, 400, 608, 816 or 1232. Colu
 
 ## Data checks
 
+Each check is one row of `bi.dq_checks` ([sql/30_checks.sql](sql/30_checks.sql)). The Data quality page shows the view, and pytest runs it. For each check, a test plants a defect and expects the check to fail ([tests/test_quality.py](tests/test_quality.py)).
+
+- **Reconcile**: run totals against their steps and payments, and raw events against the tables built from them. Threshold 0.
+- **Rule**: a block always opens an incident, and no incident stays pending. Threshold 0.
+- **Monitor**: shares that may be above 0, each with its own threshold.
+
+`bi.control_totals` counts runs, calls, decisions, blocks, incidents, cost and spend straight from the app tables. The report compares its own totals with these.
+
+To run the checks on the demo data:
+
+```sh
+uv run --directory bi pytest -m live --no-cov -s
+```
+
+On the demo data every reconcile and rule check passes. The control totals match the bi views: 8,361,559 micro-dollars of model cost, 43,520,000 of spend and 4,074 enforced blocks.
+
+| Monitor | Failing | Total | Rate | Threshold |
+| --- | --- | --- | --- | --- |
+| Cost unknown | 284 | 14,289 | 2.0% | 5% |
+| Spend unknown | 0 | 1,629 | 0% | 5% |
+| Paid, not delivered | 267 | 4,352 | 6.1% | 2% |
+| Late events | 0 | 334,861 | 0% | 1% |
+| Dropped events | 0 | 334,861 | 0% | 0.1% |
+
+Paid, not delivered fails on purpose: the "Paid API fails after payment" scenario settles a payment and then answers 500.
+
 ## Performance
 
 ## Findings
@@ -84,5 +110,11 @@ The dimensions are small: 5 agents, 5 models, 10 tools and 16 guard rules. `acme
 273 incidents have no verdict yet, so their category is `unknown` and they have no entry origin.
 
 Power BI signs in as `bi_reader`, which can read the `bi` views and nothing in `public`.
+
+### Reconciliation
+
+- **50 runs more than the tally.** The seed tally counts 14,239 runs; the database has 14,289. The 50 extra runs came from outside the main seed run. They explain the small gaps between the tally and the checks, such as 267 undelivered payments against the tally's 266.
+- **273 incidents without a verdict.** They are the "Paid link found in a web page" runs. The worker failed to find the damaging call, with "The damaging call's events never arrived": the guard refused the payment before it was signed, so there was no paid call to find.
+- **412 tool calls stored as `ok` but blocked.** In the "Phishing link in an email" runs, the SDK sends the `readEmail` call twice: `ok` when the tool returns, then `blocked` when the signature blocks its content. Ingest keeps the first row it stores (`ON CONFLICT DO NOTHING`), so the step stays `ok` and the run's `blocked` count leaves it out. The block decision and the incident are there, so `block_has_incident` passes. The events-vs-steps check matches on the step id, not the status, so it does not see this.
 
 ## Next

@@ -14,6 +14,8 @@ export type PaidApiOptions = {
     amount: string;
     payTo: string;
     answer: (path: string) => string;
+    // Paths that settle the payment, then fail: "paid, not delivered"
+    fail?: (path: string) => boolean;
 };
 
 const encode = (value: unknown) => Buffer.from(JSON.stringify(value)).toString("base64");
@@ -72,8 +74,9 @@ export async function startPaidApi(options: PaidApiOptions) {
             return;
         }
         const settlement = facilitator.settle();
-        res.writeHead(200, { "content-type": "text/plain", "payment-response": encode(settlement) });
-        res.end(options.answer(path));
+        const failed = options.fail?.(path) === true;
+        res.writeHead(failed ? 500 : 200, { "content-type": "text/plain", "payment-response": encode(settlement) });
+        res.end(failed ? "Internal error" : options.answer(path));
     });
     await new Promise<void>((resolve) => server.listen(0, "127.0.0.1", resolve));
     const local = `http://127.0.0.1:${(server.address() as AddressInfo).port}`;

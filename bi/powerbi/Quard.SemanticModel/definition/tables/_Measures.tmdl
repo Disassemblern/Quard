@@ -2,6 +2,276 @@
 table _Measures
 	lineageTag: 2e778e38-45f3-44ce-aa3c-6334e078e298
 
+	/// Runs started in the period.
+	measure 'Run count' = COUNTROWS ( Runs )
+		formatString: #,0
+		displayFolder: Runs
+		lineageTag: 824c635d-cd23-4332-bbd7-ccd8b5c290f6
+
+	/// Priced model-call cost in USD, by the agent that made the call and the day of the call. Differs from Run cost when one agent hands work to another.
+	measure 'Model cost' = DIVIDE ( SUM ( 'Model calls'[Cost micro USD] ), 1000000 )
+		formatString: $#,0.00
+		displayFolder: Cost
+		lineageTag: 54491070-69e9-4cbd-aa08-a76ab11eaade
+
+	/// Change in Model cost from the same days one month earlier. Blank when the date filter spans more than one month.
+	measure 'Model cost MoM %' =
+			VAR OneMonth = MIN ( 'Date'[Year-Month number] ) = MAX ( 'Date'[Year-Month number] )
+			VAR ThisMonth = [Model cost]
+			VAR LastMonth = CALCULATE ( [Model cost], DATEADD ( 'Date'[Date], -1, MONTH ) )
+			RETURN IF ( OneMonth && NOT ISBLANK ( ThisMonth ), DIVIDE ( ThisMonth - LastMonth, LastMonth ) )
+		formatString: +0.0%;-0.0%;0.0%
+		displayFolder: Time
+		lineageTag: c4b382ec-46dd-4347-9787-f0e5d6c06186
+
+	/// Runs with an outcome: completed, failed or blocked. Runs still going are left out.
+	measure 'Finished runs' = CALCULATE ( [Run count], Runs[Outcome] <> "running" )
+		formatString: #,0
+		displayFolder: Runs
+		lineageTag: 85de41fc-7f6c-41eb-802a-9583f5244e31
+
+	/// Failed runs / finished runs. A blocked run is finished but not failed.
+	measure 'Failure rate' = DIVIDE ( CALCULATE ( [Run count], Runs[Outcome] = "failed" ) + 0, [Finished runs] )
+		formatString: 0.0%
+		displayFolder: Runs
+		lineageTag: 8f2fae45-2e4e-4b0a-aa39-397782f8a373
+
+	/// Average number of model calls and tool calls per run.
+	measure 'Avg steps per run' = AVERAGE ( Runs[Step count] )
+		formatString: #,0.0
+		displayFolder: Runs
+		lineageTag: f8eed2b9-70ac-4ee6-8d2a-54a097f0a6b4
+
+	/// Change in Run count from the same days one month earlier. Blank when the date filter spans more than one month.
+	measure 'Run count MoM %' =
+			VAR OneMonth = MIN ( 'Date'[Year-Month number] ) = MAX ( 'Date'[Year-Month number] )
+			VAR ThisMonth = [Run count]
+			VAR LastMonth = CALCULATE ( [Run count], DATEADD ( 'Date'[Date], -1, MONTH ) )
+			RETURN IF ( OneMonth && NOT ISBLANK ( ThisMonth ), DIVIDE ( ThisMonth - LastMonth, LastMonth ) )
+		formatString: +0.0%;-0.0%;0.0%
+		displayFolder: Time
+		lineageTag: c26b52f4-098c-46a4-950a-a2b426fe38b9
+
+	/// Number of model calls. A call the app retries counts once per try.
+	measure 'Model call count' = COUNTROWS ( 'Model calls' )
+		formatString: #,0
+		displayFolder: Cost
+		lineageTag: 4647eb2d-28b5-4801-baff-e781acb307c4
+
+	/// Cost of every run in USD, by the agent that started the run. Differs from Model cost when one agent hands work to another.
+	measure 'Run cost' = DIVIDE ( SUM ( Runs[Cost micro USD] ), 1000000 )
+		formatString: $#,0.00
+		displayFolder: Cost
+		lineageTag: 06fa9165-9cd4-439f-9526-d8749dbf030e
+
+	/// Run cost / Run count, by the agent that started the run.
+	measure 'Cost per run' = DIVIDE ( [Run cost], [Run count] )
+		formatString: $#,0.0000
+		displayFolder: Cost
+		lineageTag: 9e681312-1a73-4fa1-aaca-c4b1741cc7de
+
+	/// Rank of each agent by Model cost in the current filter. Blank on total rows.
+	measure 'Agent cost rank' =
+			IF (
+				ISINSCOPE ( Agent[Agent] ),
+				RANKX ( ALLSELECTED ( Agent[Agent] ), [Model cost], , DESC, DENSE )
+			)
+		formatString: #,0
+		displayFolder: Cost
+		lineageTag: 5c4d878e-5128-4f0c-b0e2-c2959727efb3
+
+	/// 95th percentile of model-call duration in milliseconds.
+	measure 'Latency p95 ms' = PERCENTILE.INC ( 'Model calls'[Duration ms], 0.95 )
+		formatString: #,0
+		displayFolder: Cost
+		lineageTag: f80a5c46-ed1d-4f6b-8fda-80a10d453582
+
+	/// Cached input tokens / input tokens.
+	measure 'Cached token share' = DIVIDE ( SUM ( 'Model calls'[Cached tokens] ), SUM ( 'Model calls'[Input tokens] ) )
+		formatString: 0.0%
+		displayFolder: Cost
+		lineageTag: e3a5f5a9-00b3-4eb1-a3ca-080e474da60d
+
+	/// Runs whose cost is known / Run count.
+	measure 'Cost coverage' = DIVIDE ( CALCULATE ( [Run count], Runs[Cost known] = TRUE () ) + 0, [Run count] )
+		formatString: 0.0%
+		displayFolder: Cost
+		lineageTag: 78a9643a-c940-484b-aea1-65a633612132
+
+	/// Failed model calls / model calls. Not the same as Failure rate, which counts runs.
+	measure 'Model call error rate' = DIVIDE ( CALCULATE ( [Model call count], 'Model calls'[Status] = "error" ) + 0, [Model call count] )
+		formatString: 0.0%
+		displayFolder: Cost
+		lineageTag: 2f8bd474-2c66-4b62-819f-64f2ea049736
+
+	/// Change in Cost per run from the same days one month earlier. Blank when the date filter spans more than one month.
+	measure 'Cost per run MoM %' =
+			VAR OneMonth = MIN ( 'Date'[Year-Month number] ) = MAX ( 'Date'[Year-Month number] )
+			VAR ThisMonth = [Cost per run]
+			VAR LastMonth = CALCULATE ( [Cost per run], DATEADD ( 'Date'[Date], -1, MONTH ) )
+			RETURN IF ( OneMonth && NOT ISBLANK ( ThisMonth ), DIVIDE ( ThisMonth - LastMonth, LastMonth ) )
+		formatString: +0.0%;-0.0%;0.0%
+		displayFolder: Time
+		lineageTag: 2f23a4fe-5ea9-4351-a35e-a960d82bee07
+
+	/// Number of guard decisions of any kind.
+	measure 'Decision count' = COUNTROWS ( 'Guard decisions' )
+		formatString: #,0
+		displayFolder: Security
+		lineageTag: 8d32e3ca-c5c5-4e63-9f07-f01ef7d7b8d6
+
+	/// Decisions that are block and enforced. Observe-mode blocks never count as blocks.
+	measure Blocks = CALCULATE ( [Decision count], 'Guard decisions'[Is block] = TRUE () )
+		formatString: #,0
+		displayFolder: Security
+		lineageTag: f2bdf5e6-3f96-4e2f-ba32-f7e3aad43bb4
+
+	/// Decisions that are block in observe mode: the guard would have blocked and let the call through.
+	measure 'Would blocks' = CALCULATE ( [Decision count], 'Guard decisions'[Is would block] = TRUE () )
+		formatString: #,0
+		displayFolder: Security
+		lineageTag: 5c992030-9954-40ec-a81b-6fd9adaee2aa
+
+	/// Enforced blocks / all guard decisions.
+	measure 'Block rate' = DIVIDE ( [Blocks] + 0, [Decision count] )
+		formatString: 0.0%
+		displayFolder: Security
+		lineageTag: 83c789f5-810c-476f-8afa-4d42c1572b84
+
+	/// Observe-mode blocks / all guard decisions.
+	measure 'Would-block rate' = DIVIDE ( [Would blocks] + 0, [Decision count] )
+		formatString: 0.0%
+		displayFolder: Security
+		lineageTag: 327e1f81-f327-477e-99e1-141c1e81eb73
+
+	/// Number of incidents, by the agent that did the damage.
+	measure 'Incident count' = COUNTROWS ( Incidents )
+		formatString: #,0
+		displayFolder: Security
+		lineageTag: 310ff07d-60dc-45c5-a377-ebd2b64b2de7
+
+	/// Incident count / Run count.
+	measure 'Incident rate' = DIVIDE ( [Incident count] + 0, [Run count] )
+		formatString: 0.0%
+		displayFolder: Security
+		lineageTag: 77bcd655-006d-4d6a-904f-ed3250419016
+
+	/// Incidents counted by the agent where untrusted content came in.
+	measure 'Incidents by entry agent' = CALCULATE ( [Incident count], USERELATIONSHIP ( Incidents[Entry agent], Agent[Agent] ) )
+		formatString: #,0
+		displayFolder: Security
+		lineageTag: c05ea903-e8d0-4f8a-b2cb-387d0c97b6b3
+
+	/// Tool calls made after the model read untrusted content / tool calls.
+	measure 'Influenced share' =
+			DIVIDE (
+				CALCULATE ( COUNTROWS ( 'Tool calls' ), 'Tool calls'[Influenced] = TRUE () ) + 0,
+				COUNTROWS ( 'Tool calls' )
+			)
+		formatString: 0.0%
+		displayFolder: Security
+		lineageTag: 55deb92b-4315-42d7-8964-dba4d208a293
+
+	/// Change in Block rate from the same days one month earlier, in percentage points. Blank when the date filter spans more than one month.
+	measure 'Block rate MoM pp' =
+			VAR OneMonth = MIN ( 'Date'[Year-Month number] ) = MAX ( 'Date'[Year-Month number] )
+			VAR ThisMonth = [Block rate]
+			VAR LastMonth = CALCULATE ( [Block rate], DATEADD ( 'Date'[Date], -1, MONTH ) )
+			RETURN
+				IF (
+					OneMonth && NOT ISBLANK ( ThisMonth ) && NOT ISBLANK ( LastMonth ),
+					( ThisMonth - LastMonth ) * 100
+				)
+		formatString: +0.0;-0.0;0.0
+		displayFolder: Time
+		lineageTag: 74e5d407-b22e-443a-8577-63c64f0434fc
+
+	/// Change in Incident rate from the same days one month earlier, in percentage points. Blank when the date filter spans more than one month.
+	measure 'Incident rate MoM pp' =
+			VAR OneMonth = MIN ( 'Date'[Year-Month number] ) = MAX ( 'Date'[Year-Month number] )
+			VAR ThisMonth = [Incident rate]
+			VAR LastMonth = CALCULATE ( [Incident rate], DATEADD ( 'Date'[Date], -1, MONTH ) )
+			RETURN
+				IF (
+					OneMonth && NOT ISBLANK ( ThisMonth ) && NOT ISBLANK ( LastMonth ),
+					( ThisMonth - LastMonth ) * 100
+				)
+		formatString: +0.0;-0.0;0.0
+		displayFolder: Time
+		lineageTag: ccd6db95-e7bb-4e32-803f-bd041ba5714b
+
+	/// Settled x402 payments in USD, delivered or not.
+	measure Spend = DIVIDE ( CALCULATE ( SUM ( Payments[Value micro USD] ), Payments[Stage] = "settled" ), 1000000 )
+		formatString: $#,0.00
+		displayFolder: Payments
+		lineageTag: fb3bcf3c-f3ec-4dff-85f1-677ce6aeb821
+
+	/// Model cost + Spend.
+	measure 'Total AI cost' = [Model cost] + [Spend]
+		formatString: $#,0.00
+		displayFolder: Payments
+		lineageTag: 8c30256c-86bf-4ad6-b03e-b2481d8e4891
+
+	/// Settled payments whose paid response never arrived. Their value is in Paid not delivered USD.
+	measure 'Paid not delivered' = CALCULATE ( COUNTROWS ( Payments ), Payments[Stage] = "settled", Payments[Delivered] = FALSE () )
+		formatString: #,0
+		displayFolder: Payments
+		lineageTag: 88c780ac-a65b-4a05-b660-aaddc39099fd
+
+	/// Value in USD of settled payments whose paid response never arrived.
+	measure 'Paid not delivered USD' =
+			DIVIDE (
+				CALCULATE (
+					SUM ( Payments[Value micro USD] ),
+					Payments[Stage] = "settled",
+					Payments[Delivered] = FALSE ()
+				),
+				1000000
+			)
+		formatString: $#,0.00
+		displayFolder: Payments
+		lineageTag: c183489a-ed3d-4bb5-bfcb-2da4d0078928
+
+	/// Change in Spend from the same days one month earlier. Blank when the date filter spans more than one month.
+	measure 'Spend MoM %' =
+			VAR OneMonth = MIN ( 'Date'[Year-Month number] ) = MAX ( 'Date'[Year-Month number] )
+			VAR ThisMonth = [Spend]
+			VAR LastMonth = CALCULATE ( [Spend], DATEADD ( 'Date'[Date], -1, MONTH ) )
+			RETURN IF ( OneMonth && NOT ISBLANK ( ThisMonth ), DIVIDE ( ThisMonth - LastMonth, LastMonth ) )
+		formatString: +0.0%;-0.0%;0.0%
+		displayFolder: Time
+		lineageTag: aced1cc0-6c32-4be8-8532-86a9e6f7003f
+
+	/// Change in Total AI cost from the same days one month earlier. Blank when the date filter spans more than one month.
+	measure 'Total AI cost MoM %' =
+			VAR OneMonth = MIN ( 'Date'[Year-Month number] ) = MAX ( 'Date'[Year-Month number] )
+			VAR ThisMonth = [Total AI cost]
+			VAR LastMonth = CALCULATE ( [Total AI cost], DATEADD ( 'Date'[Date], -1, MONTH ) )
+			RETURN IF ( OneMonth && NOT ISBLANK ( ThisMonth ), DIVIDE ( ThisMonth - LastMonth, LastMonth ) )
+		formatString: +0.0%;-0.0%;0.0%
+		displayFolder: Time
+		lineageTag: 0d28331b-07a7-43ee-905c-e23e0007cb09
+
+	/// Model cost in the report minus model cost in the database. Must be 0. Slicers never hide a gap.
+	measure 'Cost gap vs source' =
+			CALCULATE ( [Model cost], REMOVEFILTERS () )
+				- DIVIDE ( SUM ( 'Control totals'[Source cost micro USD] ), 1000000 )
+		formatString: $#,0.000000
+		displayFolder: Data quality
+		lineageTag: ad807c65-06ed-4c80-845d-60496ed4ba53
+
+	/// Run count in the report minus runs in the database. Must be 0. Slicers never hide a gap.
+	measure 'Runs gap vs source' = CALCULATE ( [Run count], REMOVEFILTERS () ) - SUM ( 'Control totals'[Source runs] )
+		formatString: #,0
+		displayFolder: Data quality
+		lineageTag: 5fa7db6b-a04e-45bb-8a9a-62870defed7c
+
+	/// Rows of bi.dq_checks that did not pass.
+	measure 'Failing checks' = CALCULATE ( COUNTROWS ( 'Data checks' ), 'Data checks'[Passed] = FALSE () )
+		formatString: #,0
+		displayFolder: Data quality
+		lineageTag: ddbb524c-d076-474f-b44f-e7ceb2b22306
+
 	column Column1
 		dataType: string
 		isHidden

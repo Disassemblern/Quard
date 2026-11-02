@@ -10,7 +10,7 @@ model Model
 
 annotation __PBI_TimeIntelligenceEnabled = 1
 
-annotation PBI_ProTooling = ["DevMode"]
+annotation PBI_ProTooling = ["DevMode","TMDLView_Desktop","DaxQueryView_Desktop"]
 
 annotation PBI_QueryOrder = ["PgServer","PgDatabase","ProjectId","GetView","ColumnName","Runs","Model calls","Tool calls","Guard decisions","Incidents","Payments","Agent","Model","Tool","Guard","Data checks","Control totals","Date","_Measures"]
 

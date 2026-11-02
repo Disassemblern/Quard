@@ -1,0 +1,8 @@
+EVALUATE
+SUMMARIZECOLUMNS (
+    'Date'[Year-Month],
+    "Run count", [Run count],
+    "Model cost", [Model cost],
+    "Run count MoM %", [Run count MoM %],
+    "Block rate MoM pp", [Block rate MoM pp]
+)

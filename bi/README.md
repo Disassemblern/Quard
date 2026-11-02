@@ -20,6 +20,10 @@ A star: 6 facts and 5 dimensions, in `powerbi/Quard.SemanticModel`.
 - Facts show only their categories. Ids, keys and raw numbers are hidden; measures show them.
 - Implicit measures are off. Measures live in `_Measures`.
 - Every table and visible column has a description, saved as a `///` line in its TMDL file.
+- Each KPI in [kpis.md](kpis.md) is a measure with the same name, its definition as the description, a format string and a display folder.
+- Rates add `+ 0` to the top number: 0% when there is data, blank when there is none. Counts stay blank, so empty rows stay out of tables.
+- Month-over-month measures are blank unless the date filter is inside one month and that month has a value.
+- Two DAX queries are saved in the model: `Totals` and `By month`. Run them after every model change.
 
 ## Pages
 
@@ -160,5 +164,14 @@ The report imports the `bi` views in Import mode as `bi_reader`. It has 13 table
 - **No real relationships yet.** The only relationships in `relationships.tmdl` link date columns to those hidden tables. B8 adds the star schema.
 - **The Date table has 246 days.** It runs from 30 April, the first run's day, to 31 December 2026. The end date follows the current year, so it grows at the next refresh after New Year.
 - **Table names must match exactly.** DAX in B9 writes names like `'Model calls'`, so a capital in the wrong place breaks a measure. The names are `Guard decisions`, `Model calls`, `Tool calls`, `Data checks` and `Control totals`.
+
+### DAX measures
+
+36 measures in 6 display folders. The `Totals` query matches `bi.control_totals`: 14,289 runs, 8,361,559 micro-dollars of model cost, 43,520,000 of spend, 4,074 blocks and 4,093 incidents. The `By month` query matches SQL for runs and model cost in every month.
+
+- **Blank minus a number is a number.** November has no data, but Run count MoM % showed -100% and Block rate MoM pp -2.91. A MoM measure now checks that its own month has a value.
+- **A zero rate was blank.** April has 15 decisions and 0 blocks. `[Blocks]` is blank there, and so was `DIVIDE ( [Blocks], [Decision count] )`, which left May's Block rate MoM pp blank. Rates now add `+ 0` to the top number.
+- **May grows by 24,350%.** April holds 2 runs, both on 30 April, the first day of data. The math is right; the first month is almost empty.
+- **BPA warns on 15 format strings.** Microsoft's rules want `#,0.0%;-#,0.0%;#,0.0%` for percentages. MoM measures keep a `+` sign, which a card needs to show growth, and a rate never reaches 1,000%, so they stay warnings.
 
 ## Next

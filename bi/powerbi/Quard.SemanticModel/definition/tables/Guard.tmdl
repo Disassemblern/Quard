@@ -1,0 +1,43 @@
+table Guard
+	lineageTag: 2ef957a8-6f07-4a0f-91a0-d97da41270ed
+
+	column 'Guard rule'
+		dataType: string
+		lineageTag: 73a31210-5628-48d9-b4f6-802919d07f66
+		summarizeBy: none
+		sourceColumn: Guard rule
+
+		annotation SummarizationSetBy = Automatic
+
+	column Guard
+		dataType: string
+		lineageTag: cda58125-a881-439c-84d8-5ba306331049
+		summarizeBy: none
+		sourceColumn: Guard
+
+		annotation SummarizationSetBy = Automatic
+
+	column Rule
+		dataType: string
+		lineageTag: d7afb1c5-1819-4b0d-9d1a-437db0d3480c
+		summarizeBy: none
+		sourceColumn: Rule
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Guard = m
+		mode: import
+		source =
+				let
+				    Source = GetView("dim_guard"),
+				    Typed = Table.TransformColumnTypes(Source, {
+				        {"guard_rule", type text}, {"guard", type text}, {"rule", type text}
+				    }),
+				    Named = Table.TransformColumnNames(Typed, ColumnName)
+				in
+				    Named
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

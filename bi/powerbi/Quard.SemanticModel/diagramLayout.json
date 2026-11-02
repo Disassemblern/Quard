@@ -7,7 +7,172 @@
         "x": 0,
         "y": 0
       },
-      "nodes": [],
+      "nodes": [
+        {
+          "location": {
+            "x": 2595.8282246622066,
+            "y": 296.07973443597962
+          },
+          "nodeIndex": "Runs",
+          "nodeLineageTag": "4b149061-461c-4d80-a5c7-4d016bf32af1",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 620.37984641026867,
+            "y": 302.36074071122187
+          },
+          "nodeIndex": "Agent",
+          "nodeLineageTag": "0951743a-db86-4bed-94d0-2c3fab263341",
+          "size": {
+            "height": 176,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 2077.8282246622066,
+            "y": 296.07973443597962
+          },
+          "nodeIndex": "Date",
+          "nodeLineageTag": "09ac8cc7-cd4d-4ef1-8c24-7bcc002a262c",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 667.4552156416828,
+            "y": 564.35157059844892
+          },
+          "nodeIndex": "Guard",
+          "nodeLineageTag": "2ef957a8-6f07-4a0f-91a0-d97da41270ed",
+          "size": {
+            "height": 152,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 2361.8282246622066,
+            "y": 296.07973443597962
+          },
+          "nodeIndex": "Incidents",
+          "nodeLineageTag": "1403ed23-0ac2-4ef4-aa54-3c86d7ee3791",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 335.85301629671591,
+            "y": 329.33999499566551
+          },
+          "nodeIndex": "Model",
+          "nodeLineageTag": "ccb4842a-5732-45cb-b013-ce7f36e24a7e",
+          "size": {
+            "height": 128,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 677.29258950662063,
+            "y": -50
+          },
+          "nodeIndex": "Payments",
+          "nodeLineageTag": "240ad45e-6c4a-4061-8c7c-0ba9320955b1",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 1275.8282246622061,
+            "y": 541.047995380671
+          },
+          "nodeIndex": "Tool",
+          "nodeLineageTag": "f391d0f1-9f21-45f3-b5a1-a95983887b3c",
+          "size": {
+            "height": 104,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 50,
+            "y": 307.79987862744952
+          },
+          "nodeIndex": "Model calls",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 1013.4082526857693,
+            "y": 188.38231381680691
+          },
+          "nodeIndex": "Tool calls",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 1793.8282246622064,
+            "y": 310.07973443597962
+          },
+          "nodeIndex": "Data checks",
+          "size": {
+            "height": 272,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 1509.8282246622064,
+            "y": 298.07973443597962
+          },
+          "nodeIndex": "Control totals",
+          "size": {
+            "height": 296,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 953.70352814723833,
+            "y": 542.15946887195923
+          },
+          "nodeIndex": "Guard decisions",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 0
+        }
+      ],
       "name": "All tables",
       "zoomValue": 100,
       "pinKeyFieldsToTop": false,

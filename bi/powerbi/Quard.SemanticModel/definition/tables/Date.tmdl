@@ -1,0 +1,120 @@
+table Date
+	lineageTag: 09ac8cc7-cd4d-4ef1-8c24-7bcc002a262c
+
+	column Date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: c943e87b-81f8-426f-8261-2ad178693821
+		summarizeBy: none
+		sourceColumn: Date
+
+		variation Variation
+			isDefault
+			relationship: 746fbcb5-fa13-44f4-b033-2f550a57435c
+			defaultHierarchy: LocalDateTable_c8a6a6af-8dc9-4f0f-851f-e809f87655bd.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column Year
+		dataType: int64
+		formatString: 0
+		lineageTag: b4b3c131-6e63-45ff-bf33-3d3b0f559d48
+		summarizeBy: sum
+		sourceColumn: Year
+
+		annotation SummarizationSetBy = Automatic
+
+	column Quarter
+		dataType: string
+		lineageTag: a3746686-443e-412d-b0d8-24bcc588249c
+		summarizeBy: none
+		sourceColumn: Quarter
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Month number'
+		dataType: int64
+		formatString: 0
+		lineageTag: 9b3569c6-737a-4afb-b27d-02bcf84d6a68
+		summarizeBy: sum
+		sourceColumn: Month number
+
+		annotation SummarizationSetBy = Automatic
+
+	column Month
+		dataType: string
+		lineageTag: 206c13d1-8add-4bae-b165-a042e774c2a7
+		summarizeBy: none
+		sourceColumn: Month
+
+		annotation SummarizationSetBy = Automatic
+
+	column Year-Month
+		dataType: string
+		lineageTag: d4b251bf-2870-408e-b83f-11de50e542ab
+		summarizeBy: none
+		sourceColumn: Year-Month
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Year-Month number'
+		dataType: int64
+		formatString: 0
+		lineageTag: d68aa88b-d119-4073-bd9c-0b6b98f9621c
+		summarizeBy: sum
+		sourceColumn: Year-Month number
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Weekday number'
+		dataType: int64
+		formatString: 0
+		lineageTag: 962e3208-8734-4672-9e6d-38e888c548bc
+		summarizeBy: sum
+		sourceColumn: Weekday number
+
+		annotation SummarizationSetBy = Automatic
+
+	column Weekday
+		dataType: string
+		lineageTag: 720d2c3f-2aef-4147-b8f7-55118aece0dc
+		summarizeBy: none
+		sourceColumn: Weekday
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Is weekend'
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: ca9f98b4-3eed-4424-98c3-f29995df014e
+		summarizeBy: none
+		sourceColumn: Is weekend
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Date = m
+		mode: import
+		source =
+				let
+				    First = List.Min(GetView("fact_run")[start_date]),
+				    Last = #date(Date.Year(DateTimeZone.UtcNow()), 12, 31),
+				    Days = List.Dates(First, Duration.Days(Last - First) + 1, #duration(1, 0, 0, 0)),
+				    Base = Table.TransformColumnTypes(Table.FromList(Days, Splitter.SplitByNothing(), {"Date"}), {{"Date", type date}}),
+				    Year = Table.AddColumn(Base, "Year", each Date.Year([Date]), Int64.Type),
+				    Quarter = Table.AddColumn(Year, "Quarter", each "Q" & Text.From(Date.QuarterOfYear([Date])), type text),
+				    MonthNumber = Table.AddColumn(Quarter, "Month number", each Date.Month([Date]), Int64.Type),
+				    Month = Table.AddColumn(MonthNumber, "Month", each Date.ToText([Date], [Format = "MMM", Culture = "en-US"]), type text),
+				    YearMonth = Table.AddColumn(Month, "Year-Month", each Date.ToText([Date], [Format = "yyyy-MM"]), type text),
+				    YearMonthNumber = Table.AddColumn(YearMonth, "Year-Month number", each [Year] * 100 + [Month number], Int64.Type),
+				    WeekdayNumber = Table.AddColumn(YearMonthNumber, "Weekday number", each Date.DayOfWeek([Date], Day.Monday) + 1, Int64.Type),
+				    Weekday = Table.AddColumn(WeekdayNumber, "Weekday", each Date.ToText([Date], [Format = "ddd", Culture = "en-US"]), type text),
+				    Weekend = Table.AddColumn(Weekday, "Is weekend", each [Weekday number] > 5, type logical)
+				in
+				    Weekend
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

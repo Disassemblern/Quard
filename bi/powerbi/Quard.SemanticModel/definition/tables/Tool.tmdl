@@ -1,0 +1,25 @@
+table Tool
+	lineageTag: f391d0f1-9f21-45f3-b5a1-a95983887b3c
+
+	column Tool
+		dataType: string
+		lineageTag: 0418113f-a089-4642-8986-99204a50be47
+		summarizeBy: none
+		sourceColumn: Tool
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Tool = m
+		mode: import
+		source =
+				let
+				    Source = GetView("dim_tool"),
+				    Typed = Table.TransformColumnTypes(Source, {{"tool", type text}}),
+				    Named = Table.TransformColumnNames(Typed, ColumnName)
+				in
+				    Named
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

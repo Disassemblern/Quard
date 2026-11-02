@@ -1,0 +1,137 @@
+table 'Model calls'
+	lineageTag: e2b03c8b-6868-40bd-bf5f-d56ab7f734e9
+
+	column 'Run ID'
+		dataType: string
+		lineageTag: 9e287aa2-b85e-40f5-b9c2-9244f73debea
+		summarizeBy: none
+		sourceColumn: Run ID
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Step ID'
+		dataType: string
+		lineageTag: 40254171-42c2-441a-9ac6-c5f131fbdcb6
+		summarizeBy: none
+		sourceColumn: Step ID
+
+		annotation SummarizationSetBy = Automatic
+
+	column Agent
+		dataType: string
+		lineageTag: 80a68d1f-b061-4b41-b1fa-e0a969caf48b
+		summarizeBy: none
+		sourceColumn: Agent
+
+		annotation SummarizationSetBy = Automatic
+
+	column Model
+		dataType: string
+		lineageTag: c8e455e0-9261-4de6-83db-f6dcfc5ed5be
+		summarizeBy: none
+		sourceColumn: Model
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Call date'
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: ba6d08f3-da7c-4f92-bc68-d264c3fbf8be
+		summarizeBy: none
+		sourceColumn: Call date
+
+		variation Variation
+			isDefault
+			relationship: aef123d3-2c36-4a6d-824c-46724941151c
+			defaultHierarchy: LocalDateTable_5643bfac-2ff1-4fec-adfb-f5f1bb1845e4.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column 'Called at'
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: e25e2ca7-ad50-47b7-969d-61ec34845501
+		summarizeBy: none
+		sourceColumn: Called at
+
+		variation Variation
+			isDefault
+			relationship: ac91f3fa-e2a8-4439-a93b-98e775778151
+			defaultHierarchy: LocalDateTable_ef497a0b-e43a-47eb-954d-22e92459f00d.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column Status
+		dataType: string
+		lineageTag: 2074a69d-1cb3-4ada-894b-fb53dd3eafb5
+		summarizeBy: none
+		sourceColumn: Status
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Input tokens'
+		dataType: int64
+		formatString: 0
+		lineageTag: 825547a5-63ed-4a3e-a3b6-97429a5261f3
+		summarizeBy: sum
+		sourceColumn: Input tokens
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Cached tokens'
+		dataType: int64
+		formatString: 0
+		lineageTag: 59f5728a-068d-4d7e-92c1-b3a8c4f1c511
+		summarizeBy: sum
+		sourceColumn: Cached tokens
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Output tokens'
+		dataType: int64
+		formatString: 0
+		lineageTag: 0a963a31-746b-4720-9496-5a8e45484c0b
+		summarizeBy: sum
+		sourceColumn: Output tokens
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Cost micro USD'
+		dataType: int64
+		formatString: 0
+		lineageTag: df9b6fbc-18c2-4cb6-b9a7-de6e2adf3996
+		summarizeBy: sum
+		sourceColumn: Cost micro USD
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Duration ms'
+		dataType: int64
+		formatString: 0
+		lineageTag: d80a8782-9de2-4f48-a232-f5576c523e18
+		summarizeBy: sum
+		sourceColumn: Duration ms
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'Model calls' = m
+		mode: import
+		source =
+				let
+				    Source = GetView("fact_model_call"),
+				    Typed = Table.TransformColumnTypes(Source, {
+				        {"run_id", type text}, {"step_id", type text}, {"agent", type text}, {"model", type text},
+				        {"call_date", type date}, {"called_at", type datetimezone}, {"status", type text},
+				        {"input_tokens", Int64.Type}, {"cached_tokens", Int64.Type}, {"output_tokens", Int64.Type},
+				        {"cost_micro_usd", Int64.Type}, {"duration_ms", Int64.Type}
+				    }),
+				    Named = Table.TransformColumnNames(Typed, ColumnName)
+				in
+				    Named
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

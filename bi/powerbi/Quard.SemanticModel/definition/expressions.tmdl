@@ -1,0 +1,50 @@
+expression PgServer = "localhost:5433" meta [IsParameterQuery=true, Type="Text", IsParameterQueryRequired=true]
+	lineageTag: 0e327ce9-562c-4b20-b887-b4a5c6c6e0ed
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Text
+
+expression PgDatabase = "quard" meta [IsParameterQuery=true, Type="Text", IsParameterQueryRequired=true]
+	lineageTag: 502c55e2-2dd7-4fce-9226-0f0c2fbecb1f
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Text
+
+expression ProjectId = "f62ac9d0-1f37-45e7-adc6-35b857136325" meta [IsParameterQuery=true, Type="Text", IsParameterQueryRequired=true]
+	lineageTag: 7068a69b-3505-4877-a707-a5fa64535dd3
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Text
+
+expression GetView =
+		(view as text) as table =>
+		let
+		    Source = PostgreSQL.Database(PgServer, PgDatabase),
+		    View = Source{[Schema = "bi", Item = view]}[Data],
+		    Project = Table.SelectRows(View, each [project_id] = ProjectId),
+		    Columns = Table.RemoveColumns(Project, {"project_id"})
+		in
+		    Columns
+	lineageTag: af58da5e-d3c1-400c-ba8c-adb5d4fcbfb0
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Function
+
+expression ColumnName =
+		(name as text) as text =>
+		let
+		    Words = Text.Split(name, "_"),
+		    Fixed = List.Transform(Words, each if _ = "usd" then "USD" else if _ = "id" then "ID" else _),
+		    Joined = Text.Combine(Fixed, " ")
+		in
+		    Text.Upper(Text.Start(Joined, 1)) & Text.Middle(Joined, 1)
+	lineageTag: 229bf94d-8fb9-49cb-b1a0-d1a76359867b
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Function
+

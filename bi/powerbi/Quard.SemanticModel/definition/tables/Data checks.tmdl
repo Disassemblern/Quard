@@ -1,0 +1,92 @@
+table 'Data checks'
+	lineageTag: 8af9a12f-a8bb-4cdf-b8ed-7532307a3842
+
+	column 'Check name'
+		dataType: string
+		lineageTag: 85dc04dc-0c45-45b8-93b6-57af4604f595
+		summarizeBy: none
+		sourceColumn: Check name
+
+		annotation SummarizationSetBy = Automatic
+
+	column Kind
+		dataType: string
+		lineageTag: f5be3e6e-e9c5-4aef-b15a-abadfd855fbd
+		summarizeBy: none
+		sourceColumn: Kind
+
+		annotation SummarizationSetBy = Automatic
+
+	column Description
+		dataType: string
+		lineageTag: bfbb6247-fd2c-49d0-8cef-ce9e6a3c7b9e
+		summarizeBy: none
+		sourceColumn: Description
+
+		annotation SummarizationSetBy = Automatic
+
+	column Failing
+		dataType: int64
+		formatString: 0
+		lineageTag: d8776f5c-4217-4f4c-92ba-09aec9fde8c4
+		summarizeBy: sum
+		sourceColumn: Failing
+
+		annotation SummarizationSetBy = Automatic
+
+	column Total
+		dataType: int64
+		formatString: 0
+		lineageTag: 1fd4e4db-e75f-4476-b8c3-b7f924a6e3ff
+		summarizeBy: sum
+		sourceColumn: Total
+
+		annotation SummarizationSetBy = Automatic
+
+	column Rate
+		dataType: double
+		lineageTag: 3cf92ccf-5f94-43bd-a009-73942e3038dc
+		summarizeBy: sum
+		sourceColumn: Rate
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Threshold
+		dataType: double
+		lineageTag: 4e41f4ae-e7a5-49c0-92f2-5386953f37f2
+		summarizeBy: sum
+		sourceColumn: Threshold
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Passed
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 9c8605fe-3b5d-44ff-a658-ff6b92e6d2d1
+		summarizeBy: none
+		sourceColumn: Passed
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'Data checks' = m
+		mode: import
+		source =
+				let
+				    Source = GetView("dq_checks"),
+				    Typed = Table.TransformColumnTypes(Source, {
+				        {"check_name", type text}, {"kind", type text}, {"description", type text},
+				        {"failing", Int64.Type}, {"total", Int64.Type}, {"rate", type number},
+				        {"threshold", type number}, {"passed", type logical}
+				    }),
+				    Named = Table.TransformColumnNames(Typed, ColumnName)
+				in
+				    Named
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

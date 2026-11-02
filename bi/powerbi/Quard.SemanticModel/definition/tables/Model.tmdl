@@ -1,0 +1,34 @@
+table Model
+	lineageTag: ccb4842a-5732-45cb-b013-ce7f36e24a7e
+
+	column Model
+		dataType: string
+		lineageTag: 0e44a38f-df5d-451c-b10b-4f09ffe20395
+		summarizeBy: none
+		sourceColumn: Model
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Is priced'
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: eb54b3f8-7545-48d7-8365-c7d5f229bf77
+		summarizeBy: none
+		sourceColumn: Is priced
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Model = m
+		mode: import
+		source =
+				let
+				    Source = GetView("dim_model"),
+				    Typed = Table.TransformColumnTypes(Source, {{"model", type text}, {"is_priced", type logical}}),
+				    Named = Table.TransformColumnNames(Typed, ColumnName)
+				in
+				    Named
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

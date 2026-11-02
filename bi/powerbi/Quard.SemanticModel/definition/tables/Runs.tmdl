@@ -1,0 +1,177 @@
+table Runs
+	lineageTag: 4b149061-461c-4d80-a5c7-4d016bf32af1
+
+	column 'Run ID'
+		dataType: string
+		lineageTag: 6a332f01-92e6-4c0a-b09e-7bd228a54a69
+		summarizeBy: none
+		sourceColumn: Run ID
+
+		annotation SummarizationSetBy = Automatic
+
+	column Agent
+		dataType: string
+		lineageTag: dbc455e4-fbe7-4b59-8af1-cd3e6d86eea6
+		summarizeBy: none
+		sourceColumn: Agent
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Start date'
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 57573b00-91b2-4f53-b6bf-cd862982dc91
+		summarizeBy: none
+		sourceColumn: Start date
+
+		variation Variation
+			isDefault
+			relationship: b2be581c-f992-4370-bf2f-bacd5251c157
+			defaultHierarchy: LocalDateTable_654b4176-152e-4e6f-a323-a9ecbf974659.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column 'Started at'
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 5e2c30eb-7509-4498-91b0-875480df975e
+		summarizeBy: none
+		sourceColumn: Started at
+
+		variation Variation
+			isDefault
+			relationship: 408cc95a-473e-49df-8705-2846a2fa528e
+			defaultHierarchy: LocalDateTable_e88166f9-5da1-42c8-a411-c4a3c8b2509b.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column Outcome
+		dataType: string
+		lineageTag: fecc5592-28f3-4fa5-9f37-658031d1a014
+		summarizeBy: none
+		sourceColumn: Outcome
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Duration ms'
+		dataType: int64
+		formatString: 0
+		lineageTag: 9a5d9690-dfad-4389-884c-300b679738ed
+		summarizeBy: sum
+		sourceColumn: Duration ms
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Step count'
+		dataType: int64
+		formatString: 0
+		lineageTag: 5d5d4f8b-7f89-4dd7-902d-61f73ea9a07c
+		summarizeBy: sum
+		sourceColumn: Step count
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Cost micro USD'
+		dataType: int64
+		formatString: 0
+		lineageTag: 610695c2-ceb3-44f3-8c8b-df90bbb316e5
+		summarizeBy: sum
+		sourceColumn: Cost micro USD
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Cost known'
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 8dc09f12-7100-411a-b2ea-8da883979c66
+		summarizeBy: none
+		sourceColumn: Cost known
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Spend micro USD'
+		dataType: int64
+		formatString: 0
+		lineageTag: e420a98a-7ace-440d-8334-a16ff71b5286
+		summarizeBy: sum
+		sourceColumn: Spend micro USD
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Spend known'
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 4d4439f4-1765-4f2c-934a-7f2c9deca26e
+		summarizeBy: none
+		sourceColumn: Spend known
+
+		annotation SummarizationSetBy = Automatic
+
+	column Influenced
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 4d98030d-e657-4d06-b03b-87595f3045c9
+		summarizeBy: none
+		sourceColumn: Influenced
+
+		annotation SummarizationSetBy = Automatic
+
+	column Flagged
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 4ae3c6fc-43cc-4324-93fd-b480c7f265ac
+		summarizeBy: none
+		sourceColumn: Flagged
+
+		annotation SummarizationSetBy = Automatic
+
+	column Degraded
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 349a2cff-a9db-40ca-a391-e4d0cfd6210d
+		summarizeBy: none
+		sourceColumn: Degraded
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Has block'
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: e6ecd008-9276-4dce-ae13-c70e571f00f0
+		summarizeBy: none
+		sourceColumn: Has block
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Has incident'
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 9a420f53-f6f5-477c-b9c1-b393654025b7
+		summarizeBy: none
+		sourceColumn: Has incident
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Runs = m
+		mode: import
+		source =
+				let
+				    Source = GetView("fact_run"),
+				    Typed = Table.TransformColumnTypes(Source, {
+				        {"run_id", type text}, {"agent", type text}, {"start_date", type date},
+				        {"started_at", type datetimezone}, {"outcome", type text}, {"duration_ms", Int64.Type},
+				        {"step_count", Int64.Type}, {"cost_micro_usd", Int64.Type}, {"cost_known", type logical},
+				        {"spend_micro_usd", Int64.Type}, {"spend_known", type logical}, {"influenced", type logical},
+				        {"flagged", type logical}, {"degraded", type logical}, {"has_block", type logical},
+				        {"has_incident", type logical}
+				    }),
+				    Named = Table.TransformColumnNames(Typed, ColumnName)
+				in
+				    Named
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Exception
+

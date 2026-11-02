@@ -1,0 +1,61 @@
+table Agent
+	lineageTag: 0951743a-db86-4bed-94d0-2c3fab263341
+
+	column Agent
+		dataType: string
+		lineageTag: 84635928-138b-44b5-8f5c-f2c55289ed03
+		summarizeBy: none
+		sourceColumn: Agent
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'First seen date'
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: bb13a238-a933-4847-9992-3309ee9a01d4
+		summarizeBy: none
+		sourceColumn: First seen date
+
+		variation Variation
+			isDefault
+			relationship: e25f16e0-616b-40ca-be56-27fe8c89c5f1
+			defaultHierarchy: LocalDateTable_9c0789ee-55d4-4df3-bf43-41b48a405fe1.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column 'Current model'
+		dataType: string
+		lineageTag: 0e08806f-eae0-4e0c-b44b-8c90fb05b4c0
+		summarizeBy: none
+		sourceColumn: Current model
+
+		annotation SummarizationSetBy = Automatic
+
+	column Versions
+		dataType: int64
+		formatString: 0
+		lineageTag: d3c8c69c-0f77-49d2-808b-c9819ac63c55
+		summarizeBy: sum
+		sourceColumn: Versions
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Agent = m
+		mode: import
+		source =
+				let
+				    Source = GetView("dim_agent"),
+				    Typed = Table.TransformColumnTypes(Source, {
+				        {"agent", type text}, {"first_seen_date", type date}, {"current_model", type text},
+				        {"versions", Int64.Type}
+				    }),
+				    Named = Table.TransformColumnNames(Typed, ColumnName)
+				in
+				    Named
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

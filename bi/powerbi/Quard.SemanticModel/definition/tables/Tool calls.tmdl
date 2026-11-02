@@ -1,0 +1,118 @@
+table 'Tool calls'
+	lineageTag: fcc1ae4b-b29c-4d03-87f6-b6035df1edad
+
+	column 'Run ID'
+		dataType: string
+		lineageTag: a67b3666-53c7-4d5d-849c-89726caddd34
+		summarizeBy: none
+		sourceColumn: Run ID
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Step ID'
+		dataType: string
+		lineageTag: 54a75a5b-7ea1-4b7e-aa81-c18b85b8fcff
+		summarizeBy: none
+		sourceColumn: Step ID
+
+		annotation SummarizationSetBy = Automatic
+
+	column Agent
+		dataType: string
+		lineageTag: 023d2986-07bc-46e4-9b38-3afb5eb6d2b8
+		summarizeBy: none
+		sourceColumn: Agent
+
+		annotation SummarizationSetBy = Automatic
+
+	column Tool
+		dataType: string
+		lineageTag: 7f391474-5431-4c65-9239-14a900111085
+		summarizeBy: none
+		sourceColumn: Tool
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Call date'
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: a88ee5fc-a062-4258-944c-d723761f3b68
+		summarizeBy: none
+		sourceColumn: Call date
+
+		variation Variation
+			isDefault
+			relationship: 2f8edac9-47b9-4dee-9c4d-3f9db01851c1
+			defaultHierarchy: LocalDateTable_b00aee29-8554-4c17-a992-6713cff83c16.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column 'Called at'
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 22b3f947-f830-4b6b-bb0a-3baac138fd30
+		summarizeBy: none
+		sourceColumn: Called at
+
+		variation Variation
+			isDefault
+			relationship: 7c0032a3-624c-4f63-a24e-79b335d616d4
+			defaultHierarchy: LocalDateTable_481ec9f6-3a1e-414a-98ae-95ddcbf5a8f4.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column Status
+		dataType: string
+		lineageTag: 36da2f84-c0f0-4682-bdba-1e12fb69320f
+		summarizeBy: none
+		sourceColumn: Status
+
+		annotation SummarizationSetBy = Automatic
+
+	column Influenced
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 6983f3c3-135a-43ee-b630-310f3552633f
+		summarizeBy: none
+		sourceColumn: Influenced
+
+		annotation SummarizationSetBy = Automatic
+
+	column Flagged
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 4b888a46-35a1-4b7e-bde2-d47e5dd40a6b
+		summarizeBy: none
+		sourceColumn: Flagged
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Duration ms'
+		dataType: int64
+		formatString: 0
+		lineageTag: ca22475b-6e92-472b-a970-561eac6cebc3
+		summarizeBy: sum
+		sourceColumn: Duration ms
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'Tool calls' = m
+		mode: import
+		source =
+				let
+				    Source = GetView("fact_tool_call"),
+				    Typed = Table.TransformColumnTypes(Source, {
+				        {"run_id", type text}, {"step_id", type text}, {"agent", type text}, {"tool", type text},
+				        {"call_date", type date}, {"called_at", type datetimezone}, {"status", type text},
+				        {"influenced", type logical}, {"flagged", type logical}, {"duration_ms", Int64.Type}
+				    }),
+				    Named = Table.TransformColumnNames(Typed, ColumnName)
+				in
+				    Named
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

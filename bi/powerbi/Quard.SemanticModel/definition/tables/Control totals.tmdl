@@ -1,0 +1,109 @@
+table 'Control totals'
+	lineageTag: b894939d-d857-457c-be99-979d0ba32acc
+
+	column 'Source runs'
+		dataType: int64
+		formatString: 0
+		lineageTag: fdcb1e0b-d9fa-4eab-810f-389e5ecc87c1
+		summarizeBy: sum
+		sourceColumn: Source runs
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Source model calls'
+		dataType: int64
+		formatString: 0
+		lineageTag: af6c4216-ef08-49d1-b4c1-7ceb2cf52ea7
+		summarizeBy: sum
+		sourceColumn: Source model calls
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Source tool calls'
+		dataType: int64
+		formatString: 0
+		lineageTag: d8cc48af-7d49-4b13-aca6-0457b13acfac
+		summarizeBy: sum
+		sourceColumn: Source tool calls
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Source decisions'
+		dataType: int64
+		formatString: 0
+		lineageTag: a0cea964-f654-476a-87a6-175c0780661a
+		summarizeBy: sum
+		sourceColumn: Source decisions
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Source blocks'
+		dataType: int64
+		formatString: 0
+		lineageTag: a660a79f-df23-43b3-8b60-1fc3e11c4f1f
+		summarizeBy: sum
+		sourceColumn: Source blocks
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Source incidents'
+		dataType: int64
+		formatString: 0
+		lineageTag: 9f198b81-cda8-4f50-8e60-be3a06a3370c
+		summarizeBy: sum
+		sourceColumn: Source incidents
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Source cost micro USD'
+		dataType: int64
+		formatString: 0
+		lineageTag: f4d46d3b-2f25-4367-85b9-d7b3be4c0a2c
+		summarizeBy: sum
+		sourceColumn: Source cost micro USD
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Source spend micro USD'
+		dataType: int64
+		formatString: 0
+		lineageTag: 30ca55e3-7fe5-4664-b3bf-39b913f29154
+		summarizeBy: sum
+		sourceColumn: Source spend micro USD
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Refreshed at'
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 9b509976-9a90-4050-aa17-a3846f3496fc
+		summarizeBy: none
+		sourceColumn: Refreshed at
+
+		variation Variation
+			isDefault
+			relationship: 8414b8e5-de96-4dd1-a77e-d498f430f944
+			defaultHierarchy: LocalDateTable_1adbf59e-8962-4e7e-a445-23d44dae814c.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'Control totals' = m
+		mode: import
+		source =
+				let
+				    Source = GetView("control_totals"),
+				    Typed = Table.TransformColumnTypes(Source, {
+				        {"source_runs", Int64.Type}, {"source_model_calls", Int64.Type},
+				        {"source_tool_calls", Int64.Type}, {"source_decisions", Int64.Type},
+				        {"source_blocks", Int64.Type}, {"source_incidents", Int64.Type},
+				        {"source_cost_micro_usd", Int64.Type}, {"source_spend_micro_usd", Int64.Type}
+				    }),
+				    Named = Table.TransformColumnNames(Typed, ColumnName),
+				    Refreshed = Table.AddColumn(Named, "Refreshed at", each DateTimeZone.UtcNow(), type datetimezone)
+				in
+				    Refreshed
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

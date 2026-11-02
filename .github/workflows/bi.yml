@@ -36,3 +36,23 @@ jobs:
             - run: uv run --directory bi ruff check
             - run: uv run --directory bi ruff format --check
             - run: uv run --directory bi pytest
+
+    # Best Practice Analyzer on the semantic model. Severity 3 fails.
+    model:
+        runs-on: windows-latest
+        steps:
+            - uses: actions/checkout@v5
+            - name: Download Tabular Editor 2.29.0
+              shell: pwsh
+              run: |
+                  $url = "https://github.com/TabularEditor/TabularEditor/releases/download/2.29.0/TabularEditor.Portable.zip"
+                  Invoke-WebRequest $url -OutFile te.zip
+                  $sha = "C0D3A7ABDA4572BAAF3AEEDF9CB342CE7AD4D9840E6438D6B13DF02267D308A4"
+                  if ((Get-FileHash te.zip).Hash -ne $sha) { throw "Unexpected Tabular Editor zip" }
+                  Expand-Archive te.zip -DestinationPath te
+            - name: Run BPA
+              shell: pwsh
+              run: |
+                  $te = Start-Process -FilePath "te\TabularEditor.exe" -Wait -PassThru -NoNewWindow `
+                      -ArgumentList '"bi\powerbi\Quard.SemanticModel\definition" -A "bi\powerbi\bpa-rules.json" -G'
+                  exit $te.ExitCode

@@ -1,41 +1,49 @@
+/// One row per payment event, from the challenge to the settlement.
 table Payments
 	lineageTag: 240ad45e-6c4a-4061-8c7c-0ba9320955b1
 
 	column 'Event ID'
 		dataType: string
+		isHidden
 		lineageTag: 71f28a79-b643-4a30-91b4-f91eefe20d72
 		summarizeBy: none
 		sourceColumn: Event ID
+
+		changedProperty = IsHidden
 
 		annotation SummarizationSetBy = Automatic
 
 	column 'Run ID'
 		dataType: string
+		isHidden
 		lineageTag: 5adbc831-8958-4261-90ab-83ff50b74050
 		summarizeBy: none
 		sourceColumn: Run ID
+
+		changedProperty = IsHidden
 
 		annotation SummarizationSetBy = Automatic
 
 	column Agent
 		dataType: string
+		isHidden
 		lineageTag: e77a00e8-0947-4004-acc0-ef42ae49059d
 		summarizeBy: none
 		sourceColumn: Agent
+
+		changedProperty = IsHidden
 
 		annotation SummarizationSetBy = Automatic
 
 	column 'Payment date'
 		dataType: dateTime
+		isHidden
 		formatString: Long Date
 		lineageTag: d78d264f-f469-48ef-8c9c-cb35482991d0
 		summarizeBy: none
 		sourceColumn: Payment date
 
-		variation Variation
-			isDefault
-			relationship: ff49e1d4-051b-4f35-8210-5ca93ceb652a
-			defaultHierarchy: LocalDateTable_0a52d210-12ed-44df-a608-e47e0faf7e1d.'Date Hierarchy'
+		changedProperty = IsHidden
 
 		annotation SummarizationSetBy = Automatic
 
@@ -43,6 +51,7 @@ table Payments
 
 	column 'Paid at'
 		dataType: dateTime
+		isHidden
 		formatString: General Date
 		lineageTag: d0c828b2-179f-40a0-abcc-02e8ca9b7b17
 		summarizeBy: none
@@ -53,8 +62,11 @@ table Payments
 			relationship: 9375f4b1-ad28-4711-85c9-f79b7d97fde9
 			defaultHierarchy: LocalDateTable_fcbb2f4d-c901-4a16-8c71-12e3ceac72b2.'Date Hierarchy'
 
+		changedProperty = IsHidden
+
 		annotation SummarizationSetBy = Automatic
 
+	/// How far the payment got: challenged, refused, signed, settled or failed.
 	column Stage
 		dataType: string
 		lineageTag: a48db01f-c988-467b-ac04-85952ff213df
@@ -63,6 +75,7 @@ table Payments
 
 		annotation SummarizationSetBy = Automatic
 
+	/// Host the payment was for.
 	column Host
 		dataType: string
 		lineageTag: 140870cd-3531-4de8-9d95-10124ae804f1
@@ -71,6 +84,7 @@ table Payments
 
 		annotation SummarizationSetBy = Automatic
 
+	/// Network the payment was made on.
 	column Network
 		dataType: string
 		lineageTag: 784cef15-0631-4b63-a9f0-2afaf42bf450
@@ -81,43 +95,58 @@ table Payments
 
 	column Asset
 		dataType: string
+		isHidden
 		lineageTag: 8bd026f3-9cf7-4cdd-b6a5-ec0afd7a8722
 		summarizeBy: none
 		sourceColumn: Asset
+
+		changedProperty = IsHidden
 
 		annotation SummarizationSetBy = Automatic
 
 	column 'Pay to'
 		dataType: string
+		isHidden
 		lineageTag: 9bae2417-c293-4f8a-b48c-d52e966e5c96
 		summarizeBy: none
 		sourceColumn: Pay to
+
+		changedProperty = IsHidden
 
 		annotation SummarizationSetBy = Automatic
 
 	column 'Value micro USD'
 		dataType: int64
+		isHidden
 		formatString: 0
 		lineageTag: 87b0d5e1-896d-45c9-b347-b3da8a341cb8
 		summarizeBy: sum
 		sourceColumn: Value micro USD
 
+		changedProperty = IsHidden
+
 		annotation SummarizationSetBy = Automatic
 
 	column 'Amount atomic'
 		dataType: string
+		isHidden
 		lineageTag: 645b6dfa-2a0c-4b02-955f-65e20cf4432d
 		summarizeBy: none
 		sourceColumn: Amount atomic
+
+		changedProperty = IsHidden
 
 		annotation SummarizationSetBy = Automatic
 
 	column Delivered
 		dataType: boolean
+		isHidden
 		formatString: """TRUE"";""TRUE"";""FALSE"""
 		lineageTag: 9cecfce7-6d8e-4026-801c-732f5ceafec1
 		summarizeBy: none
 		sourceColumn: Delivered
+
+		changedProperty = IsHidden
 
 		annotation SummarizationSetBy = Automatic
 

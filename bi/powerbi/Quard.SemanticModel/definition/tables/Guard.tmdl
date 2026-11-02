@@ -1,6 +1,8 @@
+/// One row per guard rule.
 table Guard
 	lineageTag: 2ef957a8-6f07-4a0f-91a0-d97da41270ed
 
+	/// The guard and its rule joined, such as guard / rule. The key of the table.
 	column 'Guard rule'
 		dataType: string
 		lineageTag: 73a31210-5628-48d9-b4f6-802919d07f66
@@ -9,6 +11,7 @@ table Guard
 
 		annotation SummarizationSetBy = Automatic
 
+	/// Name of the guard.
 	column Guard
 		dataType: string
 		lineageTag: cda58125-a881-439c-84d8-5ba306331049
@@ -17,6 +20,7 @@ table Guard
 
 		annotation SummarizationSetBy = Automatic
 
+	/// Name of the rule inside the guard.
 	column Rule
 		dataType: string
 		lineageTag: d7afb1c5-1819-4b0d-9d1a-437db0d3480c

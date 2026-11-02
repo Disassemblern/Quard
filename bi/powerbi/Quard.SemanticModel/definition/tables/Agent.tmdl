@@ -1,6 +1,8 @@
+/// One row per agent. Filters every fact by agent.
 table Agent
 	lineageTag: 0951743a-db86-4bed-94d0-2c3fab263341
 
+	/// Agent name. The key of the table.
 	column Agent
 		dataType: string
 		lineageTag: 84635928-138b-44b5-8f5c-f2c55289ed03
@@ -9,6 +11,7 @@ table Agent
 
 		annotation SummarizationSetBy = Automatic
 
+	/// UTC day the agent first showed up in a run, step, decision, payment or incident.
 	column 'First seen date'
 		dataType: dateTime
 		formatString: Long Date
@@ -25,6 +28,7 @@ table Agent
 
 		annotation UnderlyingDateTimeDataType = Date
 
+	/// Model of the agent version seen last.
 	column 'Current model'
 		dataType: string
 		lineageTag: 0e08806f-eae0-4e0c-b44b-8c90fb05b4c0
@@ -33,14 +37,15 @@ table Agent
 
 		annotation SummarizationSetBy = Automatic
 
+	/// Number of versions of the agent seen.
 	column Versions
 		dataType: int64
 		formatString: 0
 		lineageTag: d3c8c69c-0f77-49d2-808b-c9819ac63c55
-		summarizeBy: sum
+		summarizeBy: none
 		sourceColumn: Versions
 
-		annotation SummarizationSetBy = Automatic
+		annotation SummarizationSetBy = User
 
 	partition Agent = m
 		mode: import

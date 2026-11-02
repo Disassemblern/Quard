@@ -1,6 +1,8 @@
+/// One row per model that made a call.
 table Model
 	lineageTag: ccb4842a-5732-45cb-b013-ce7f36e24a7e
 
+	/// Model name. The key of the table.
 	column Model
 		dataType: string
 		lineageTag: 0e44a38f-df5d-451c-b10b-4f09ffe20395
@@ -9,6 +11,7 @@ table Model
 
 		annotation SummarizationSetBy = Automatic
 
+	/// True when at least one call of the model has a cost.
 	column 'Is priced'
 		dataType: boolean
 		formatString: """TRUE"";""TRUE"";""FALSE"""

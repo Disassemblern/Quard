@@ -1,6 +1,8 @@
+/// One row per data quality check. Not related to other tables.
 table 'Data checks'
 	lineageTag: 8af9a12f-a8bb-4cdf-b8ed-7532307a3842
 
+	/// Name of the check.
 	column 'Check name'
 		dataType: string
 		lineageTag: 85dc04dc-0c45-45b8-93b6-57af4604f595
@@ -9,6 +11,7 @@ table 'Data checks'
 
 		annotation SummarizationSetBy = Automatic
 
+	/// Reconcile, rule or monitor.
 	column Kind
 		dataType: string
 		lineageTag: f5be3e6e-e9c5-4aef-b15a-abadfd855fbd
@@ -17,6 +20,7 @@ table 'Data checks'
 
 		annotation SummarizationSetBy = Automatic
 
+	/// What the check tests.
 	column Description
 		dataType: string
 		lineageTag: bfbb6247-fd2c-49d0-8cef-ce9e6a3c7b9e
@@ -25,44 +29,49 @@ table 'Data checks'
 
 		annotation SummarizationSetBy = Automatic
 
+	/// Rows that fail the check.
 	column Failing
 		dataType: int64
 		formatString: 0
 		lineageTag: d8776f5c-4217-4f4c-92ba-09aec9fde8c4
-		summarizeBy: sum
+		summarizeBy: none
 		sourceColumn: Failing
 
-		annotation SummarizationSetBy = Automatic
+		annotation SummarizationSetBy = User
 
+	/// Rows the check looked at.
 	column Total
 		dataType: int64
 		formatString: 0
 		lineageTag: 1fd4e4db-e75f-4476-b8c3-b7f924a6e3ff
-		summarizeBy: sum
+		summarizeBy: none
 		sourceColumn: Total
 
-		annotation SummarizationSetBy = Automatic
+		annotation SummarizationSetBy = User
 
+	/// Failing divided by Total.
 	column Rate
 		dataType: double
 		lineageTag: 3cf92ccf-5f94-43bd-a009-73942e3038dc
-		summarizeBy: sum
+		summarizeBy: none
 		sourceColumn: Rate
 
-		annotation SummarizationSetBy = Automatic
+		annotation SummarizationSetBy = User
 
 		annotation PBI_FormatHint = {"isGeneralNumber":true}
 
+	/// Highest rate allowed. 0 for reconcile and rule checks.
 	column Threshold
 		dataType: double
 		lineageTag: 4e41f4ae-e7a5-49c0-92f2-5386953f37f2
-		summarizeBy: sum
+		summarizeBy: none
 		sourceColumn: Threshold
 
-		annotation SummarizationSetBy = Automatic
+		annotation SummarizationSetBy = User
 
 		annotation PBI_FormatHint = {"isGeneralNumber":true}
 
+	/// True when the rate is within the threshold.
 	column Passed
 		dataType: boolean
 		formatString: """TRUE"";""TRUE"";""FALSE"""

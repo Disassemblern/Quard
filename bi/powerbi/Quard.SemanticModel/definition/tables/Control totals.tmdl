@@ -1,78 +1,88 @@
+/// Totals counted straight from the app tables, to compare with the report's own totals. Not related to other tables.
 table 'Control totals'
 	lineageTag: b894939d-d857-457c-be99-979d0ba32acc
 
+	/// Runs counted in the app tables.
 	column 'Source runs'
 		dataType: int64
 		formatString: 0
 		lineageTag: fdcb1e0b-d9fa-4eab-810f-389e5ecc87c1
-		summarizeBy: sum
+		summarizeBy: none
 		sourceColumn: Source runs
 
-		annotation SummarizationSetBy = Automatic
+		annotation SummarizationSetBy = User
 
+	/// Model calls counted in the app tables.
 	column 'Source model calls'
 		dataType: int64
 		formatString: 0
 		lineageTag: af6c4216-ef08-49d1-b4c1-7ceb2cf52ea7
-		summarizeBy: sum
+		summarizeBy: none
 		sourceColumn: Source model calls
 
-		annotation SummarizationSetBy = Automatic
+		annotation SummarizationSetBy = User
 
+	/// Tool calls counted in the app tables.
 	column 'Source tool calls'
 		dataType: int64
 		formatString: 0
 		lineageTag: d8cc48af-7d49-4b13-aca6-0457b13acfac
-		summarizeBy: sum
+		summarizeBy: none
 		sourceColumn: Source tool calls
 
-		annotation SummarizationSetBy = Automatic
+		annotation SummarizationSetBy = User
 
+	/// Guard decisions counted in the app tables.
 	column 'Source decisions'
 		dataType: int64
 		formatString: 0
 		lineageTag: a0cea964-f654-476a-87a6-175c0780661a
-		summarizeBy: sum
+		summarizeBy: none
 		sourceColumn: Source decisions
 
-		annotation SummarizationSetBy = Automatic
+		annotation SummarizationSetBy = User
 
+	/// Enforced blocks counted in the app tables.
 	column 'Source blocks'
 		dataType: int64
 		formatString: 0
 		lineageTag: a660a79f-df23-43b3-8b60-1fc3e11c4f1f
-		summarizeBy: sum
+		summarizeBy: none
 		sourceColumn: Source blocks
 
-		annotation SummarizationSetBy = Automatic
+		annotation SummarizationSetBy = User
 
+	/// Incidents counted in the app tables.
 	column 'Source incidents'
 		dataType: int64
 		formatString: 0
 		lineageTag: 9f198b81-cda8-4f50-8e60-be3a06a3370c
-		summarizeBy: sum
+		summarizeBy: none
 		sourceColumn: Source incidents
 
-		annotation SummarizationSetBy = Automatic
+		annotation SummarizationSetBy = User
 
+	/// Model cost in micro-dollars, each call rounded and then added up.
 	column 'Source cost micro USD'
 		dataType: int64
 		formatString: 0
 		lineageTag: f4d46d3b-2f25-4367-85b9-d7b3be4c0a2c
-		summarizeBy: sum
+		summarizeBy: none
 		sourceColumn: Source cost micro USD
 
-		annotation SummarizationSetBy = Automatic
+		annotation SummarizationSetBy = User
 
+	/// Value of settled payments in micro-dollars.
 	column 'Source spend micro USD'
 		dataType: int64
 		formatString: 0
 		lineageTag: 30ca55e3-7fe5-4664-b3bf-39b913f29154
-		summarizeBy: sum
+		summarizeBy: none
 		sourceColumn: Source spend micro USD
 
-		annotation SummarizationSetBy = Automatic
+		annotation SummarizationSetBy = User
 
+	/// When the data was last refreshed (UTC).
 	column 'Refreshed at'
 		dataType: dateTime
 		formatString: General Date

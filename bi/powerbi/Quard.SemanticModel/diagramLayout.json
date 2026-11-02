@@ -10,8 +10,8 @@
       "nodes": [
         {
           "location": {
-            "x": 2595.8282246622066,
-            "y": 296.07973443597962
+            "x": 170.65370245662746,
+            "y": 773.56697590487124
           },
           "nodeIndex": "Runs",
           "nodeLineageTag": "4b149061-461c-4d80-a5c7-4d016bf32af1",
@@ -19,12 +19,12 @@
             "height": 300,
             "width": 234
           },
-          "zIndex": 0
+          "zIndex": 1
         },
         {
           "location": {
-            "x": 620.37984641026867,
-            "y": 302.36074071122187
+            "x": 546.889709373736,
+            "y": 0
           },
           "nodeIndex": "Agent",
           "nodeLineageTag": "0951743a-db86-4bed-94d0-2c3fab263341",
@@ -32,12 +32,12 @@
             "height": 176,
             "width": 234
           },
-          "zIndex": 0
+          "zIndex": 14
         },
         {
           "location": {
-            "x": 2077.8282246622066,
-            "y": 296.07973443597962
+            "x": 268.381877627577,
+            "y": 0
           },
           "nodeIndex": "Date",
           "nodeLineageTag": "09ac8cc7-cd4d-4ef1-8c24-7bcc002a262c",
@@ -45,12 +45,12 @@
             "height": 300,
             "width": 234
           },
-          "zIndex": 0
+          "zIndex": 12
         },
         {
           "location": {
-            "x": 667.4552156416828,
-            "y": 564.35157059844892
+            "x": 1422.2187852060729,
+            "y": 0
           },
           "nodeIndex": "Guard",
           "nodeLineageTag": "2ef957a8-6f07-4a0f-91a0-d97da41270ed",
@@ -58,12 +58,12 @@
             "height": 152,
             "width": 234
           },
-          "zIndex": 0
+          "zIndex": 2
         },
         {
           "location": {
-            "x": 2361.8282246622066,
-            "y": 296.07973443597962
+            "x": 1315.0903268715924,
+            "y": 788.66227457273931
           },
           "nodeIndex": "Incidents",
           "nodeLineageTag": "1403ed23-0ac2-4ef4-aa54-3c86d7ee3791",
@@ -71,12 +71,12 @@
             "height": 300,
             "width": 234
           },
-          "zIndex": 0
+          "zIndex": 3
         },
         {
           "location": {
-            "x": 335.85301629671591,
-            "y": 329.33999499566551
+            "x": 876.1048345112265,
+            "y": 0
           },
           "nodeIndex": "Model",
           "nodeLineageTag": "ccb4842a-5732-45cb-b013-ce7f36e24a7e",
@@ -84,12 +84,12 @@
             "height": 128,
             "width": 234
           },
-          "zIndex": 0
+          "zIndex": 4
         },
         {
           "location": {
-            "x": 677.29258950662063,
-            "y": -50
+            "x": 1584.9950929037948,
+            "y": 797.26866372746042
           },
           "nodeIndex": "Payments",
           "nodeLineageTag": "240ad45e-6c4a-4061-8c7c-0ba9320955b1",
@@ -97,12 +97,12 @@
             "height": 300,
             "width": 234
           },
-          "zIndex": 0
+          "zIndex": 5
         },
         {
           "location": {
-            "x": 1275.8282246622061,
-            "y": 541.047995380671
+            "x": 1156.6550294678286,
+            "y": 0
           },
           "nodeIndex": "Tool",
           "nodeLineageTag": "f391d0f1-9f21-45f3-b5a1-a95983887b3c",
@@ -110,71 +110,89 @@
             "height": 104,
             "width": 234
           },
-          "zIndex": 0
+          "zIndex": 6
         },
         {
           "location": {
-            "x": 50,
-            "y": 307.79987862744952
+            "x": 447.24398398125777,
+            "y": 774.56155980542758
           },
           "nodeIndex": "Model calls",
+          "nodeLineageTag": "e2b03c8b-6868-40bd-bf5f-d56ab7f734e9",
           "size": {
             "height": 300,
             "width": 234
           },
-          "zIndex": 0
+          "zIndex": 13
         },
         {
           "location": {
-            "x": 1013.4082526857693,
-            "y": 188.38231381680691
+            "x": 729.37880413916992,
+            "y": 782.26206986878731
           },
           "nodeIndex": "Tool calls",
+          "nodeLineageTag": "fcc1ae4b-b29c-4d03-87f6-b6035df1edad",
           "size": {
             "height": 300,
             "width": 234
           },
-          "zIndex": 0
+          "zIndex": 7
         },
         {
           "location": {
-            "x": 1793.8282246622064,
-            "y": 310.07973443597962
+            "x": 1950.7395983348031,
+            "y": 157.14080060319534
           },
           "nodeIndex": "Data checks",
+          "nodeLineageTag": "8af9a12f-a8bb-4cdf-b8ed-7532307a3842",
           "size": {
             "height": 272,
             "width": 234
           },
-          "zIndex": 0
+          "zIndex": 8
         },
         {
           "location": {
-            "x": 1509.8282246622064,
-            "y": 298.07973443597962
+            "x": 1962.6863664008401,
+            "y": 462.9359877882016
           },
           "nodeIndex": "Control totals",
+          "nodeLineageTag": "b894939d-d857-457c-be99-979d0ba32acc",
           "size": {
             "height": 296,
             "width": 234
           },
-          "zIndex": 0
+          "zIndex": 9
         },
         {
           "location": {
-            "x": 953.70352814723833,
-            "y": 542.15946887195923
+            "x": 1025.2074452638647,
+            "y": 790.43695886024523
           },
           "nodeIndex": "Guard decisions",
+          "nodeLineageTag": "e734e35f-4509-4f84-8dfa-eb6a83650429",
           "size": {
             "height": 300,
             "width": 234
           },
-          "zIndex": 0
+          "zIndex": 10
+        },
+        {
+          "location": {
+            "x": 1984.0957463973357,
+            "y": 786.5568027323867
+          },
+          "nodeIndex": "_Measures",
+          "nodeLineageTag": "2e778e38-45f3-44ce-aa3c-6334e078e298",
+          "size": {
+            "height": 104,
+            "width": 234
+          },
+          "zIndex": 11
         }
       ],
       "name": "All tables",
-      "zoomValue": 100,
+      "zoomValue": 50.346892102823162,
       "pinKeyFieldsToTop": false,
       "showExtraHeaderInfo": false,
       "hideKeyFieldsWhenCollapsed": false,

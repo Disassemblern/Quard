@@ -1,0 +1,26 @@
+/// Holds every measure, so the fact tables hold data only.
+table _Measures
+	lineageTag: 2e778e38-45f3-44ce-aa3c-6334e078e298
+
+	column Column1
+		dataType: string
+		isHidden
+		lineageTag: 50ffafa7-0d78-4b7f-8794-312bcc87f3b7
+		summarizeBy: none
+		sourceColumn: Column1
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	partition _Measures = m
+		mode: import
+		source =
+				let
+				    Source = Table.FromRows(Json.Document(Binary.Decompress(Binary.FromText("i44FAA==", BinaryEncoding.Base64), Compression.Deflate)), let _t = ((type nullable text) meta [Serialized.Text = true]) in type table [Column1 = _t]),
+				    #"Changed Type" = Table.TransformColumnTypes(Source,{{"Column1", type text}})
+				in
+				    #"Changed Type"
+
+	annotation PBI_ResultType = Table
+

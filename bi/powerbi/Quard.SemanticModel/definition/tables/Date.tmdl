@@ -1,31 +1,32 @@
+/// One row per UTC day, from the first run to 31 December of this year. The model's date table.
 table Date
 	lineageTag: 09ac8cc7-cd4d-4ef1-8c24-7bcc002a262c
+	dataCategory: Time
 
+	/// The UTC day. The key of the table.
 	column Date
 		dataType: dateTime
+		isKey
 		formatString: Long Date
 		lineageTag: c943e87b-81f8-426f-8261-2ad178693821
 		summarizeBy: none
 		sourceColumn: Date
 
-		variation Variation
-			isDefault
-			relationship: 746fbcb5-fa13-44f4-b033-2f550a57435c
-			defaultHierarchy: LocalDateTable_c8a6a6af-8dc9-4f0f-851f-e809f87655bd.'Date Hierarchy'
-
 		annotation SummarizationSetBy = Automatic
 
 		annotation UnderlyingDateTimeDataType = Date
 
+	/// Calendar year.
 	column Year
 		dataType: int64
 		formatString: 0
 		lineageTag: b4b3c131-6e63-45ff-bf33-3d3b0f559d48
-		summarizeBy: sum
+		summarizeBy: none
 		sourceColumn: Year
 
-		annotation SummarizationSetBy = Automatic
+		annotation SummarizationSetBy = User
 
+	/// Calendar quarter, Q1 to Q4.
 	column Quarter
 		dataType: string
 		lineageTag: a3746686-443e-412d-b0d8-24bcc588249c
@@ -36,55 +37,77 @@ table Date
 
 	column 'Month number'
 		dataType: int64
+		isHidden
 		formatString: 0
 		lineageTag: 9b3569c6-737a-4afb-b27d-02bcf84d6a68
-		summarizeBy: sum
+		summarizeBy: none
 		sourceColumn: Month number
 
-		annotation SummarizationSetBy = Automatic
+		changedProperty = IsHidden
 
+		annotation SummarizationSetBy = User
+
+	/// Three-letter month name. Sorted by Month number.
 	column Month
 		dataType: string
 		lineageTag: 206c13d1-8add-4bae-b165-a042e774c2a7
 		summarizeBy: none
 		sourceColumn: Month
+		sortByColumn: 'Month number'
+
+		changedProperty = SortByColumn
 
 		annotation SummarizationSetBy = Automatic
 
+	/// Year and month as yyyy-MM. Sorted by Year-Month number.
 	column Year-Month
 		dataType: string
 		lineageTag: d4b251bf-2870-408e-b83f-11de50e542ab
 		summarizeBy: none
 		sourceColumn: Year-Month
+		sortByColumn: 'Year-Month number'
+
+		changedProperty = SortByColumn
 
 		annotation SummarizationSetBy = Automatic
 
 	column 'Year-Month number'
 		dataType: int64
+		isHidden
 		formatString: 0
 		lineageTag: d68aa88b-d119-4073-bd9c-0b6b98f9621c
-		summarizeBy: sum
+		summarizeBy: none
 		sourceColumn: Year-Month number
 
-		annotation SummarizationSetBy = Automatic
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = User
 
 	column 'Weekday number'
 		dataType: int64
+		isHidden
 		formatString: 0
 		lineageTag: 962e3208-8734-4672-9e6d-38e888c548bc
-		summarizeBy: sum
+		summarizeBy: none
 		sourceColumn: Weekday number
 
-		annotation SummarizationSetBy = Automatic
+		changedProperty = IsHidden
 
+		annotation SummarizationSetBy = User
+
+	/// Three-letter weekday name. Sorted by Weekday number, Monday first.
 	column Weekday
 		dataType: string
 		lineageTag: 720d2c3f-2aef-4147-b8f7-55118aece0dc
 		summarizeBy: none
 		sourceColumn: Weekday
+		sortByColumn: 'Weekday number'
+
+		changedProperty = SortByColumn
 
 		annotation SummarizationSetBy = Automatic
 
+	/// True for Saturday and Sunday.
 	column 'Is weekend'
 		dataType: boolean
 		formatString: """TRUE"";""TRUE"";""FALSE"""

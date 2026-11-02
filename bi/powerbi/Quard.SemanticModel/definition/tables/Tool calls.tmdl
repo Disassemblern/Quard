@@ -1,49 +1,60 @@
+/// One row per tool call. Its arguments are not stored.
 table 'Tool calls'
 	lineageTag: fcc1ae4b-b29c-4d03-87f6-b6035df1edad
 
 	column 'Run ID'
 		dataType: string
+		isHidden
 		lineageTag: a67b3666-53c7-4d5d-849c-89726caddd34
 		summarizeBy: none
 		sourceColumn: Run ID
+
+		changedProperty = IsHidden
 
 		annotation SummarizationSetBy = Automatic
 
 	column 'Step ID'
 		dataType: string
+		isHidden
 		lineageTag: 54a75a5b-7ea1-4b7e-aa81-c18b85b8fcff
 		summarizeBy: none
 		sourceColumn: Step ID
+
+		changedProperty = IsHidden
 
 		annotation SummarizationSetBy = Automatic
 
 	column Agent
 		dataType: string
+		isHidden
 		lineageTag: 023d2986-07bc-46e4-9b38-3afb5eb6d2b8
 		summarizeBy: none
 		sourceColumn: Agent
+
+		changedProperty = IsHidden
 
 		annotation SummarizationSetBy = Automatic
 
 	column Tool
 		dataType: string
+		isHidden
 		lineageTag: 7f391474-5431-4c65-9239-14a900111085
 		summarizeBy: none
 		sourceColumn: Tool
+
+		changedProperty = IsHidden
 
 		annotation SummarizationSetBy = Automatic
 
 	column 'Call date'
 		dataType: dateTime
+		isHidden
 		formatString: Long Date
 		lineageTag: a88ee5fc-a062-4258-944c-d723761f3b68
 		summarizeBy: none
 		sourceColumn: Call date
 
-		variation Variation
-			isDefault
-			relationship: 2f8edac9-47b9-4dee-9c4d-3f9db01851c1
-			defaultHierarchy: LocalDateTable_b00aee29-8554-4c17-a992-6713cff83c16.'Date Hierarchy'
+		changedProperty = IsHidden
 
 		annotation SummarizationSetBy = Automatic
 
@@ -51,6 +62,7 @@ table 'Tool calls'
 
 	column 'Called at'
 		dataType: dateTime
+		isHidden
 		formatString: General Date
 		lineageTag: 22b3f947-f830-4b6b-bb0a-3baac138fd30
 		summarizeBy: none
@@ -61,8 +73,11 @@ table 'Tool calls'
 			relationship: 7c0032a3-624c-4f63-a24e-79b335d616d4
 			defaultHierarchy: LocalDateTable_481ec9f6-3a1e-414a-98ae-95ddcbf5a8f4.'Date Hierarchy'
 
+		changedProperty = IsHidden
+
 		annotation SummarizationSetBy = Automatic
 
+	/// Status of the tool call. A call the signature blocked can still show ok; see Reconciliation in bi/README.md.
 	column Status
 		dataType: string
 		lineageTag: 36da2f84-c0f0-4682-bdba-1e12fb69320f
@@ -73,30 +88,39 @@ table 'Tool calls'
 
 	column Influenced
 		dataType: boolean
+		isHidden
 		formatString: """TRUE"";""TRUE"";""FALSE"""
 		lineageTag: 6983f3c3-135a-43ee-b630-310f3552633f
 		summarizeBy: none
 		sourceColumn: Influenced
 
+		changedProperty = IsHidden
+
 		annotation SummarizationSetBy = Automatic
 
 	column Flagged
 		dataType: boolean
+		isHidden
 		formatString: """TRUE"";""TRUE"";""FALSE"""
 		lineageTag: 4b888a46-35a1-4b7e-bde2-d47e5dd40a6b
 		summarizeBy: none
 		sourceColumn: Flagged
 
+		changedProperty = IsHidden
+
 		annotation SummarizationSetBy = Automatic
 
 	column 'Duration ms'
 		dataType: int64
+		isHidden
 		formatString: 0
 		lineageTag: ca22475b-6e92-472b-a970-561eac6cebc3
-		summarizeBy: sum
+		summarizeBy: none
 		sourceColumn: Duration ms
 
-		annotation SummarizationSetBy = Automatic
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = User
 
 	partition 'Tool calls' = m
 		mode: import

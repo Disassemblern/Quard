@@ -1,38 +1,44 @@
+/// One row per incident. A run has at most one. It opens when a guard blocks, would block, flags or strips something.
 table Incidents
 	lineageTag: 1403ed23-0ac2-4ef4-aa54-3c86d7ee3791
 
 	column 'Incident ID'
 		dataType: string
+		isHidden
 		lineageTag: b11b092f-6828-42f6-a668-490b6661103a
 		summarizeBy: none
 		sourceColumn: Incident ID
+
+		changedProperty = IsHidden
 
 		annotation SummarizationSetBy = Automatic
 
 	column 'Run ID'
 		dataType: string
+		isHidden
 		lineageTag: 9a3cd070-36db-4d6f-a71f-9e1bf2e466b7
 		summarizeBy: none
 		sourceColumn: Run ID
+
+		changedProperty = IsHidden
 
 		annotation SummarizationSetBy = Automatic
 
 	column 'Opened date'
 		dataType: dateTime
+		isHidden
 		formatString: Long Date
 		lineageTag: 8252aa03-5e43-47b6-bb9c-b2d9496341b0
 		summarizeBy: none
 		sourceColumn: Opened date
 
-		variation Variation
-			isDefault
-			relationship: ea8f682f-cc1e-4ffc-9763-9bdb8e818067
-			defaultHierarchy: LocalDateTable_8f0f4a5b-33a5-4ef8-bb13-0a8fb491fc9f.'Date Hierarchy'
+		changedProperty = IsHidden
 
 		annotation SummarizationSetBy = Automatic
 
 		annotation UnderlyingDateTimeDataType = Date
 
+	/// Root cause of the incident, or unknown until the root-cause finder files a verdict.
 	column Category
 		dataType: string
 		lineageTag: 75a627b1-5745-4020-948c-f62057a0350d
@@ -43,36 +49,49 @@ table Incidents
 
 	column 'Damage agent'
 		dataType: string
+		isHidden
 		lineageTag: 9b1441c0-83ce-46d1-8b98-971a237103f7
 		summarizeBy: none
 		sourceColumn: Damage agent
+
+		changedProperty = IsHidden
 
 		annotation SummarizationSetBy = Automatic
 
 	column 'Entry agent'
 		dataType: string
+		isHidden
 		lineageTag: 4a2d4ca9-65a5-4206-b620-6b479184d27b
 		summarizeBy: none
 		sourceColumn: Entry agent
+
+		changedProperty = IsHidden
 
 		annotation SummarizationSetBy = Automatic
 
 	column 'Turning agent'
 		dataType: string
+		isHidden
 		lineageTag: fc55c7d0-bf78-41d4-91d2-4e5126b29813
 		summarizeBy: none
 		sourceColumn: Turning agent
+
+		changedProperty = IsHidden
 
 		annotation SummarizationSetBy = Automatic
 
 	column 'Entry origin'
 		dataType: string
+		isHidden
 		lineageTag: b39cf980-bffc-4b59-8d04-450bed43d803
 		summarizeBy: none
 		sourceColumn: Entry origin
 
+		changedProperty = IsHidden
+
 		annotation SummarizationSetBy = Automatic
 
+	/// Where the risky content came in, such as web or email.
 	column 'Entry origin kind'
 		dataType: string
 		lineageTag: f58f1b54-2dc1-43cf-aefd-5b2529f3601f
@@ -83,42 +102,57 @@ table Incidents
 
 	column 'Entry trust'
 		dataType: string
+		isHidden
 		lineageTag: 39b4ab64-3b6a-4e5e-8fc8-963348ecc2ab
 		summarizeBy: none
 		sourceColumn: Entry trust
+
+		changedProperty = IsHidden
 
 		annotation SummarizationSetBy = Automatic
 
 	column 'Damage tool'
 		dataType: string
+		isHidden
 		lineageTag: ed1d9910-ce62-4297-aba5-d9fa16e21a5a
 		summarizeBy: none
 		sourceColumn: Damage tool
+
+		changedProperty = IsHidden
 
 		annotation SummarizationSetBy = Automatic
 
 	column 'Find state'
 		dataType: string
+		isHidden
 		lineageTag: 897fd97c-973d-449c-ba76-c24009e71bbb
 		summarizeBy: none
 		sourceColumn: Find state
+
+		changedProperty = IsHidden
 
 		annotation SummarizationSetBy = Automatic
 
 	column 'Replay state'
 		dataType: string
+		isHidden
 		lineageTag: 5fa5b2c6-498d-403e-8ba8-a59e5a057b61
 		summarizeBy: none
 		sourceColumn: Replay state
+
+		changedProperty = IsHidden
 
 		annotation SummarizationSetBy = Automatic
 
 	column 'Spent micro USD'
 		dataType: int64
+		isHidden
 		formatString: 0
 		lineageTag: 33e32bc6-0e59-4ba1-ad26-1f7658b97e2e
 		summarizeBy: sum
 		sourceColumn: Spent micro USD
+
+		changedProperty = IsHidden
 
 		annotation SummarizationSetBy = Automatic
 

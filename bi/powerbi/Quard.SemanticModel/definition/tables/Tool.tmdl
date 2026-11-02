@@ -1,6 +1,8 @@
+/// One row per tool that was called or named in a decision or an incident.
 table Tool
 	lineageTag: f391d0f1-9f21-45f3-b5a1-a95983887b3c
 
+	/// Tool name. The key of the table.
 	column Tool
 		dataType: string
 		lineageTag: 0418113f-a089-4642-8986-99204a50be47

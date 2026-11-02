@@ -1,57 +1,71 @@
+/// One row per guard decision: allow, block, ask, pass, strip or flag. One tool call can get several.
 table 'Guard decisions'
 	lineageTag: e734e35f-4509-4f84-8dfa-eb6a83650429
 
 	column 'Event ID'
 		dataType: string
+		isHidden
 		lineageTag: 21f57c03-f3a8-4f25-8dc1-c61a5fd207a2
 		summarizeBy: none
 		sourceColumn: Event ID
+
+		changedProperty = IsHidden
 
 		annotation SummarizationSetBy = Automatic
 
 	column 'Run ID'
 		dataType: string
+		isHidden
 		lineageTag: b6699378-0e18-480c-b083-b32648f3119d
 		summarizeBy: none
 		sourceColumn: Run ID
+
+		changedProperty = IsHidden
 
 		annotation SummarizationSetBy = Automatic
 
 	column Agent
 		dataType: string
+		isHidden
 		lineageTag: 1bd238ec-eb9a-43b5-aa7f-0f68ba5c843b
 		summarizeBy: none
 		sourceColumn: Agent
+
+		changedProperty = IsHidden
 
 		annotation SummarizationSetBy = Automatic
 
 	column Tool
 		dataType: string
+		isHidden
 		lineageTag: f76a507c-48f5-48ca-8e18-3339eb4fd961
 		summarizeBy: none
 		sourceColumn: Tool
+
+		changedProperty = IsHidden
 
 		annotation SummarizationSetBy = Automatic
 
 	column 'Guard rule'
 		dataType: string
+		isHidden
 		lineageTag: 13c45ea0-9601-4eb3-95c4-b9aa9d5ca2a6
 		summarizeBy: none
 		sourceColumn: Guard rule
+
+		changedProperty = IsHidden
 
 		annotation SummarizationSetBy = Automatic
 
 	column 'Decision date'
 		dataType: dateTime
+		isHidden
 		formatString: Long Date
 		lineageTag: d0a4b926-58e4-4478-a633-b3e26ea2ce5f
 		summarizeBy: none
 		sourceColumn: Decision date
 
-		variation Variation
-			isDefault
-			relationship: a299660d-b6ac-4c9c-8747-cd526b771afe
-			defaultHierarchy: LocalDateTable_4d79f13f-7629-4b79-9eb2-d58db5c612a7.'Date Hierarchy'
+		changedProperty = IsHidden
 
 		annotation SummarizationSetBy = Automatic
 
@@ -59,6 +73,7 @@ table 'Guard decisions'
 
 	column 'Decided at'
 		dataType: dateTime
+		isHidden
 		formatString: General Date
 		lineageTag: d2dff898-9f6e-46aa-b880-d6f5abf9eda3
 		summarizeBy: none
@@ -69,8 +84,11 @@ table 'Guard decisions'
 			relationship: 8c7ce587-9d5a-4b16-9a34-96ab2a8e07dc
 			defaultHierarchy: LocalDateTable_7c7df8d4-fa3b-4127-b1c0-5b9c2d251f76.'Date Hierarchy'
 
+		changedProperty = IsHidden
+
 		annotation SummarizationSetBy = Automatic
 
+	/// What the guard rule decided: allow, block, ask, pass, strip or flag.
 	column Decision
 		dataType: string
 		lineageTag: 0bc3b7b2-2f27-4216-b7e0-9a199e99f626
@@ -79,6 +97,7 @@ table 'Guard decisions'
 
 		annotation SummarizationSetBy = Automatic
 
+	/// Whether the guard rule ran in block mode or observe mode.
 	column Mode
 		dataType: string
 		lineageTag: b7fd3270-f88f-449d-893d-6631f9817de3
@@ -89,19 +108,25 @@ table 'Guard decisions'
 
 	column 'Is block'
 		dataType: boolean
+		isHidden
 		formatString: """TRUE"";""TRUE"";""FALSE"""
 		lineageTag: 8897879a-da6f-416e-99ac-7115ebd0c1e7
 		summarizeBy: none
 		sourceColumn: Is block
 
+		changedProperty = IsHidden
+
 		annotation SummarizationSetBy = Automatic
 
 	column 'Is would block'
 		dataType: boolean
+		isHidden
 		formatString: """TRUE"";""TRUE"";""FALSE"""
 		lineageTag: 6cc1727f-dd3e-4117-821a-680a8e86f15a
 		summarizeBy: none
 		sourceColumn: Is would block
+
+		changedProperty = IsHidden
 
 		annotation SummarizationSetBy = Automatic
 
@@ -119,8 +144,6 @@ table 'Guard decisions'
 				    Named = Table.TransformColumnNames(Typed, ColumnName)
 				in
 				    Named
-
-	changedProperty = Name
 
 	annotation PBI_NavigationStepName = Navigation
 

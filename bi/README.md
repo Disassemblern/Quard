@@ -8,6 +8,19 @@ A Power BI layer on top of Quard's Postgres data.
 
 ## Model
 
+![Model view](img/model.png)
+
+A star: 6 facts and 5 dimensions, in `powerbi/Quard.SemanticModel`.
+
+- Facts: Runs, Model calls, Tool calls, Guard decisions, Incidents, Payments.
+- Dimensions: Date, Agent, Model, Tool, Guard. Each one filters its facts, one to many, in one direction.
+- No relationships between facts. Data checks and Control totals stand alone.
+- Agent plays three roles on Incidents. `Damage agent` is active; `Entry agent` and `Turning agent` are inactive, for USERELATIONSHIP in measures.
+- Date is the marked date table. Month, Weekday and Year-Month sort by their number columns.
+- Facts show only their categories. Ids, keys and raw numbers are hidden; measures show them.
+- Implicit measures are off. Measures live in `_Measures`.
+- Every table and visible column has a description, saved as a `///` line in its TMDL file.
+
 ## Pages
 
 ## Standards
@@ -41,6 +54,26 @@ Pages are 1280 x 720 px: 12 columns of 88 px, 16 px gutters and 24 px margins, o
 | Chart row 2 | 1 to 12 | 24 | 464 | 1232 | 232 |
 
 A panel n columns wide is n x 104 - 16 px: 192, 296, 400, 608, 816 or 1232. Column n starts at x = 24 + (n - 1) x 104. The KPI card puts 16 px between its tiles, so 2, 3, 4 or 6 numbers line up with the columns; 5 don't.
+
+### Naming
+
+- SQL: `bi.dim_*`, `bi.fact_*` and `bi.dq_*`, in snake_case. Suffixes `_micro_usd`, `_ms`, `_date` and `_at`; prefixes `is_` and `has_`.
+- Model: plural names for facts (Runs, Model calls), singular for dimensions (Agent, Date). Sentence case for columns and measures.
+- Units go in measure names where they help, such as Latency p95 ms.
+- Count measures end in "count", and control totals start with "Source", so a name never clashes with a table or a column.
+- A KPI in [kpis.md](kpis.md) and its measure share one name.
+
+### Best Practice Analyzer
+
+[powerbi/bpa-rules.json](powerbi/bpa-rules.json) holds Microsoft's published rules and the `[Quard]` team rules. Severity 3 is an error and fails the `model` job in CI. A rule becomes an error only once the model passes it.
+
+Run it before each commit that touches the model. It needs [Tabular Editor 2](https://github.com/TabularEditor/TabularEditor/releases) in `C:\tools\TabularEditor`:
+
+```powershell
+$te = Start-Process -FilePath "C:\tools\TabularEditor\TabularEditor.exe" -Wait -PassThru -NoNewWindow `
+    -ArgumentList '"bi\powerbi\Quard.SemanticModel\definition" -A "bi\powerbi\bpa-rules.json"'
+$te.ExitCode
+```
 
 ## Data checks
 
@@ -116,5 +149,16 @@ Power BI signs in as `bi_reader`, which can read the `bi` views and nothing in `
 - **50 runs more than the tally.** The seed tally counts 14,239 runs; the database has 14,289. The 50 extra runs came from outside the main seed run. They explain the small gaps between the tally and the checks, such as 267 undelivered payments against the tally's 266.
 - **273 incidents without a verdict.** They are the "Paid link found in a web page" runs. The worker failed to find the damaging call, with "The damaging call's events never arrived": the guard refused the payment before it was signed, so there was no paid call to find.
 - **412 tool calls stored as `ok` but blocked.** In the "Phishing link in an email" runs, the SDK sends the `readEmail` call twice: `ok` when the tool returns, then `blocked` when the signature blocks its content. Ingest keeps the first row it stores (`ON CONFLICT DO NOTHING`), so the step stays `ok` and the run's `blocked` count leaves it out. The block decision and the incident are there, so `block_has_incident` passes. The events-vs-steps check matches on the step id, not the status, so it does not see this.
+
+### Power Query
+
+The report imports the `bi` views in Import mode as `bi_reader`. It has 13 tables, 3 parameters (`PgServer`, `PgDatabase`, `ProjectId`) and 2 helper functions (`GetView`, `ColumnName`). Every table row count in Power BI matches the SQL count, such as 14,289 runs and 45,836 model calls, and a full refresh has no errors.
+
+- **Where things are saved.** The parameters and helpers are in `definition/expressions.tmdl`, and each table's M code is in its own file under `definition/tables`. The sign-in is not in any saved file.
+- **Folding was checked on a test query.** View Native Query is greyed out on a query that calls `GetView`. A test query with the same steps written out showed the project filter as a SQL `WHERE`, so Postgres does the filtering.
+- **Auto date/time made 14 hidden tables.** Power BI builds a `LocalDateTable_*` table and a relationship for each date column. They are saved in Git for now, and B11 turns the option off and measures the difference.
+- **No real relationships yet.** The only relationships in `relationships.tmdl` link date columns to those hidden tables. B8 adds the star schema.
+- **The Date table has 246 days.** It runs from 30 April, the first run's day, to 31 December 2026. The end date follows the current year, so it grows at the next refresh after New Year.
+- **Table names must match exactly.** DAX in B9 writes names like `'Model calls'`, so a capital in the wrong place breaks a measure. The names are `Guard decisions`, `Model calls`, `Tool calls`, `Data checks` and `Control totals`.
 
 ## Next

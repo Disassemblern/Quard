@@ -1,6 +1,7 @@
 model Model
 	culture: en-US
 	defaultPowerBIDataSourceVersion: powerBI_V3
+	discourageImplicitMeasures
 	sourceQueryCulture: en-US
 	valueFilterBehavior: independent
 	dataAccessOptions
@@ -11,25 +12,19 @@ annotation __PBI_TimeIntelligenceEnabled = 1
 
 annotation PBI_ProTooling = ["DevMode"]
 
-annotation PBI_QueryOrder = ["PgServer","PgDatabase","ProjectId","GetView","ColumnName","Runs","Model calls","Tool calls","Guard decisions","Incidents","Payments","Agent","Model","Tool","Guard","Data checks","Control totals","Date"]
+annotation PBI_QueryOrder = ["PgServer","PgDatabase","ProjectId","GetView","ColumnName","Runs","Model calls","Tool calls","Guard decisions","Incidents","Payments","Agent","Model","Tool","Guard","Data checks","Control totals","Date","_Measures"]
 
 ref table Runs
 ref table DateTableTemplate_2015a1cb-b3f8-4d23-85d9-784201350ecd
-ref table LocalDateTable_654b4176-152e-4e6f-a323-a9ecbf974659
 ref table LocalDateTable_e88166f9-5da1-42c8-a411-c4a3c8b2509b
 ref table 'Model calls'
-ref table LocalDateTable_5643bfac-2ff1-4fec-adfb-f5f1bb1845e4
 ref table LocalDateTable_ef497a0b-e43a-47eb-954d-22e92459f00d
 ref table 'Tool calls'
-ref table LocalDateTable_b00aee29-8554-4c17-a992-6713cff83c16
 ref table LocalDateTable_481ec9f6-3a1e-414a-98ae-95ddcbf5a8f4
 ref table 'Guard decisions'
-ref table LocalDateTable_4d79f13f-7629-4b79-9eb2-d58db5c612a7
 ref table LocalDateTable_7c7df8d4-fa3b-4127-b1c0-5b9c2d251f76
 ref table Incidents
-ref table LocalDateTable_8f0f4a5b-33a5-4ef8-bb13-0a8fb491fc9f
 ref table Payments
-ref table LocalDateTable_0a52d210-12ed-44df-a608-e47e0faf7e1d
 ref table LocalDateTable_fcbb2f4d-c901-4a16-8c71-12e3ceac72b2
 ref table Agent
 ref table LocalDateTable_9c0789ee-55d4-4df3-bf43-41b48a405fe1
@@ -40,7 +35,7 @@ ref table 'Data checks'
 ref table 'Control totals'
 ref table LocalDateTable_1adbf59e-8962-4e7e-a445-23d44dae814c
 ref table Date
-ref table LocalDateTable_c8a6a6af-8dc9-4f0f-851f-e809f87655bd
+ref table _Measures
 
 ref cultureInfo en-US
 

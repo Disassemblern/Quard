@@ -63,7 +63,7 @@ As a security lead, I want block and would-block counts per guard rule, so that 
 - **Page:** Security. **KPIs:** K07, K08, with Blocks and Would blocks.
 - [x] A table has one row per guard rule, with Blocks, Would blocks and Would-block rate as columns.
 - [x] It is sorted by Would blocks, highest first.
-- [ ] The date and agent filters change it.
+- [x] The date and agent filters change it.
 - [x] With no filter, its Blocks total equals Blocks in the "Totals" DAX query.
 
 ### SEC-2. Where attacks come in
@@ -93,7 +93,7 @@ As an engineering manager, I want agents ranked by model cost, with cost per run
 - [x] One bar per agent shows Cost per run, labeled with its Agent cost rank.
 - [x] Rank 1 is the agent with the highest Model cost in the current filter; equal costs share a rank.
 - [x] Each agent's tooltip shows its Failure rate and Avg steps per run, the usual reasons a run costs more.
-- [ ] The date and agent filters change both the values and the ranks.
+- [x] The date and agent filters change both the values and the ranks.
 
 ### ENG-2. Unreliable models
 
@@ -136,7 +136,7 @@ As finance, I want to know how much cost is unknown, so that I know how complete
 
 - **Page:** Finance. **KPIs:** K16.
 - [x] A card shows Cost coverage as a percent of runs.
-- [ ] The date and agent filters change it.
+- [x] The date and agent filters change it.
 - [x] A tooltip says that runs with an unpriced model call still count in Run count, but their unpriced calls add nothing to Model cost.
 
 ### OPS-1. Failing data checks

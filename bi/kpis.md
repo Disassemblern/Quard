@@ -52,9 +52,9 @@ As anyone, I want the headline KPIs with their change from last month on one pag
 
 - **Page:** Overview. **KPIs:** K01, K02, K03, K05, K07, K09, K04, K23 to K27.
 - [x] Six cards show Run count, Model cost, Cost per run, Spend, Block rate and Incident rate.
-- [ ] With the date filter inside one month, each card shows its change from the same days one month earlier: in percent for counts and money, in percentage points for rates.
+- [x] With the date filter inside one month, each card shows its change from the same days one month earlier: in percent for counts and money, in percentage points for rates.
 - [x] With a date filter longer than a month, the change is blank, not a misleading number.
-- [ ] Run count and Model cost for a month equal that month's row in the "By month" DAX query.
+- [x] Run count and Model cost for a month equal that month's row in the "By month" DAX query.
 
 ### SEC-1. Guard rules ready to block
 
@@ -74,7 +74,7 @@ As a security lead, I want incidents by category, entry origin and entry agent o
 - [x] Incident count by category, where incidents without a verdict yet show as "unknown".
 - [x] Incident count by entry origin kind, such as web or email.
 - [x] Per agent, Incidents by entry agent next to Incident count (by the agent that did the damage).
-- [ ] The date filter changes all three, by the day each incident opened.
+- [x] The date filter changes all three, by the day each incident opened.
 
 ### SEC-3. Agents that act on untrusted content
 
@@ -102,7 +102,7 @@ As an engineering manager, I want latency p95 and failure rate per model, so tha
 - **Page:** Engineering. **KPIs:** K13, K18, with Model call count.
 - [x] A table has one row per model, with Model call count, Latency p95 ms and Model call error rate.
 - [x] Each model row shows its own values, not the same number on every row.
-- [ ] The date filter changes the table.
+- [x] The date filter changes the table.
 
 ### ENG-3. Effect of model changes
 

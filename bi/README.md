@@ -17,7 +17,7 @@ A star: 6 facts and 5 dimensions, in `powerbi/Quard.SemanticModel`.
 - No relationships between facts. Data checks and Control totals stand alone.
 - Agent plays three roles on Incidents. `Damage agent` is active; `Entry agent` and `Turning agent` are inactive, for USERELATIONSHIP in measures.
 - Date is the marked date table. Month, Weekday and Year-Month sort by their number columns.
-- Facts show only their categories. Ids, keys and raw numbers are hidden; measures show them.
+- Facts show only their categories. Ids, keys and raw numbers are hidden; measures show them. Payments shows Run ID and Pay to, for the Finance page's list of payments to dispute.
 - Implicit measures are off. Measures live in `_Measures`.
 - Every table and visible column has a description, saved as a `///` line in its TMDL file.
 - Each KPI in [kpis.md](kpis.md) is a measure with the same name, its definition as the description, a format string and a display folder.
@@ -172,6 +172,6 @@ The report imports the `bi` views in Import mode as `bi_reader`. It has 13 table
 - **Blank minus a number is a number.** November has no data, but Run count MoM % showed -100% and Block rate MoM pp -2.91. A MoM measure now checks that its own month has a value.
 - **A zero rate was blank.** April has 15 decisions and 0 blocks. `[Blocks]` is blank there, and so was `DIVIDE ( [Blocks], [Decision count] )`, which left May's Block rate MoM pp blank. Rates now add `+ 0` to the top number.
 - **May grows by 24,350%.** April holds 2 runs, both on 30 April, the first day of data. The math is right; the first month is almost empty.
-- **BPA warns on 15 format strings.** Microsoft's rules want `#,0.0%;-#,0.0%;#,0.0%` for percentages. MoM measures keep a `+` sign, which a card needs to show growth, and a rate never reaches 1,000%, so they stay warnings.
+- **BPA warns on 15 format strings.** Microsoft's rules want `#,0.0%;-#,0.0%;#,0.0%` for percentages. MoM measures keep a `+` sign, which a card needs to show growth, and a rate never reaches 1,000%, so they stay warnings. Two more are false alarms: Last refresh is a date, not a whole number, and Check passed looks unused because BPA can't see that the report's icons use it.
 
 ## Next

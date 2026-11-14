@@ -272,6 +272,19 @@ table _Measures
 		displayFolder: Data quality
 		lineageTag: ddbb524c-d076-474f-b44f-e7ceb2b22306
 
+	/// When the data was last refreshed, in UTC.
+	measure 'Last refresh' = MAX ( 'Control totals'[Refreshed at] )
+		formatString: yyyy-mm-dd hh:nn
+		displayFolder: Data quality
+		lineageTag: d2a32cbf-e59d-428e-a89d-59f4af75bcdd
+
+	/// 1 when a data check passed, 0 when it failed. Drives the icon on the Data checks table.
+	measure 'Check passed' = IF ( SELECTEDVALUE ( 'Data checks'[Passed] ), 1, 0 )
+		formatString: #,0
+		isHidden
+		displayFolder: Data quality
+		lineageTag: 479a4c49-5cc3-4555-bf56-b37ef6905be3
+
 	column Column1
 		dataType: string
 		isHidden

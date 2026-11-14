@@ -52,29 +52,27 @@ table 'Data checks'
 	/// Failing divided by Total.
 	column Rate
 		dataType: double
+		formatString: 0.0%
 		lineageTag: 3cf92ccf-5f94-43bd-a009-73942e3038dc
 		summarizeBy: none
 		sourceColumn: Rate
 
 		annotation SummarizationSetBy = User
 
-		annotation PBI_FormatHint = {"isGeneralNumber":true}
-
 	/// Highest rate allowed. 0 for reconcile and rule checks.
 	column Threshold
 		dataType: double
+		formatString: 0.0%
 		lineageTag: 4e41f4ae-e7a5-49c0-92f2-5386953f37f2
 		summarizeBy: none
 		sourceColumn: Threshold
 
 		annotation SummarizationSetBy = User
 
-		annotation PBI_FormatHint = {"isGeneralNumber":true}
-
-	/// True when the rate is within the threshold.
+	/// True when the rate is within the threshold. Shows as Passed or Failed.
 	column Passed
 		dataType: boolean
-		formatString: """TRUE"";""TRUE"";""FALSE"""
+		formatString: """Passed"";""Passed"";""Failed"""
 		lineageTag: 9c8605fe-3b5d-44ff-a658-ff6b92e6d2d1
 		summarizeBy: none
 		sourceColumn: Passed

@@ -13,14 +13,12 @@ table Payments
 
 		annotation SummarizationSetBy = Automatic
 
+	/// Run the payment was made in, to find it in Quard.
 	column 'Run ID'
 		dataType: string
-		isHidden
 		lineageTag: 5adbc831-8958-4261-90ab-83ff50b74050
 		summarizeBy: none
 		sourceColumn: Run ID
-
-		changedProperty = IsHidden
 
 		annotation SummarizationSetBy = Automatic
 
@@ -104,14 +102,12 @@ table Payments
 
 		annotation SummarizationSetBy = Automatic
 
+	/// Address the payment went to: the payee.
 	column 'Pay to'
 		dataType: string
-		isHidden
 		lineageTag: 9bae2417-c293-4f8a-b48c-d52e966e5c96
 		summarizeBy: none
 		sourceColumn: Pay to
-
-		changedProperty = IsHidden
 
 		annotation SummarizationSetBy = Automatic
 

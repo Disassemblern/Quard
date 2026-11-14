@@ -7,7 +7,7 @@ table Date
 	column Date
 		dataType: dateTime
 		isKey
-		formatString: Long Date
+		formatString: yyyy-mm-dd
 		lineageTag: c943e87b-81f8-426f-8261-2ad178693821
 		summarizeBy: none
 		sourceColumn: Date

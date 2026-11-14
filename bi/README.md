@@ -27,6 +27,18 @@ A star: 6 facts and 5 dimensions, in `powerbi/Quard.SemanticModel`.
 
 ## Pages
 
+Every page starts with the same header: its title, a date range slicer, an agent slicer and one KPI card. The slicers are synced across pages, except that they don't filter the Data quality page. `tests/test_report.py` checks the grid, alt text, titles, tab order, slicer sync, the theme copy, and that every field a visual uses exists in the model.
+
+Finance differs from its wireframe: the paid-not-delivered table is 8 columns wide and the cost line 4, because payee addresses and run ids are long. Power BI shows true/false columns as True or False whatever their format string, so the Data checks table shows a `Check result` measure instead of the Passed column.
+
+| Page | Stories | Shows |
+| --- | --- | --- |
+| [Overview](img/overview.png) | ALL-1 | Headline KPIs with their MoM change, runs and cost by month, top 5 agents by cost, incidents by category. |
+| [Security](img/security.png) | SEC-1 to SEC-3 | Guard rules with blocks and would-blocks, incidents by month, origin and agent, influenced share by agent. |
+| [Engineering](img/engineering.png) | ENG-1 to ENG-3 | Cost per run by agent with its rank, model cost by model, a models table, cached token share by month. |
+| [Finance](img/finance.png) | FIN-1 to FIN-3 | Total AI cost by month, paid-not-delivered payments, spend by host and by payee. |
+| [Data quality](img/data-quality.png) | OPS-1, OPS-2 | Every data check with a passed or failed icon and word. |
+
 ## Standards
 
 ### Report design
@@ -172,6 +184,6 @@ The report imports the `bi` views in Import mode as `bi_reader`. It has 13 table
 - **Blank minus a number is a number.** November has no data, but Run count MoM % showed -100% and Block rate MoM pp -2.91. A MoM measure now checks that its own month has a value.
 - **A zero rate was blank.** April has 15 decisions and 0 blocks. `[Blocks]` is blank there, and so was `DIVIDE ( [Blocks], [Decision count] )`, which left May's Block rate MoM pp blank. Rates now add `+ 0` to the top number.
 - **May grows by 24,350%.** April holds 2 runs, both on 30 April, the first day of data. The math is right; the first month is almost empty.
-- **BPA warns on 15 format strings.** Microsoft's rules want `#,0.0%;-#,0.0%;#,0.0%` for percentages. MoM measures keep a `+` sign, which a card needs to show growth, and a rate never reaches 1,000%, so they stay warnings. Two more are false alarms: Last refresh is a date, not a whole number, and Check passed looks unused because BPA can't see that the report's icons use it.
+- **BPA warns on 15 format strings.** Microsoft's rules want `#,0.0%;-#,0.0%;#,0.0%` for percentages. MoM measures keep a `+` sign, which a card needs to show growth, and a rate never reaches 1,000%, so they stay warnings. The rest are false alarms. Last refresh is a date, not a whole number. Check passed and Check result are hidden helpers for the Data checks table: they look unused because BPA can't see the report, and Check result is text, not a whole number.
 
 ## Next

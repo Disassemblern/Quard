@@ -69,10 +69,10 @@ table 'Data checks'
 
 		annotation SummarizationSetBy = User
 
-	/// True when the rate is within the threshold. Shows as Passed or Failed.
+	/// True when the rate is within the threshold.
 	column Passed
 		dataType: boolean
-		formatString: """Passed"";""Passed"";""Failed"""
+		formatString: """TRUE"";""TRUE"";""FALSE"""
 		lineageTag: 9c8605fe-3b5d-44ff-a658-ff6b92e6d2d1
 		summarizeBy: none
 		sourceColumn: Passed

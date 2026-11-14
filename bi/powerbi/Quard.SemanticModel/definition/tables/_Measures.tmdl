@@ -285,6 +285,16 @@ table _Measures
 		displayFolder: Data quality
 		lineageTag: 479a4c49-5cc3-4555-bf56-b37ef6905be3
 
+	/// Passed or Failed for one data check. Blank on total rows.
+	measure 'Check result' =
+			IF (
+				HASONEVALUE ( 'Data checks'[Passed] ),
+				IF ( SELECTEDVALUE ( 'Data checks'[Passed] ), "Passed", "Failed" )
+			)
+		isHidden
+		displayFolder: Data quality
+		lineageTag: 6b1f0d3e-8c2a-4e57-9a41-2f7c5d8e1b90
+
 	column Column1
 		dataType: string
 		isHidden

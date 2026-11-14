@@ -32,6 +32,7 @@
                 "border": [{ "show": true, "color": { "solid": { "color": "#2b2b2b" } }, "width": 1, "radius": 0 }],
                 "dropShadow": [{ "show": false }],
                 "title": [{ "show": true, "fontSize": 12 }],
+                "subTitle": [{ "show": false }],
                 "categoryAxis": [{ "gridlineColor": { "solid": { "color": "#292929" } } }],
                 "valueAxis": [{ "gridlineColor": { "solid": { "color": "#292929" } } }]
             }
@@ -49,6 +50,10 @@
                 "border": [{ "show": false }],
                 "title": [{ "show": false }],
                 "layout": [{ "$id": "default", "maxTiles": 6, "cellPadding": 16 }],
+                "label": [{ "$id": "default", "fontSize": 9 }],
+                "value": [{ "$id": "default", "fontSize": 20, "labelDisplayUnits": 1 }],
+                "referenceLabelTitle": [{ "$id": "default", "titleFontSize": 9 }],
+                "referenceLabelValue": [{ "$id": "default", "valueFontSize": 9 }],
                 "shapeCustomRectangle": [{ "$id": "default", "rectangleRoundedCurve": 0 }],
                 "fillCustom": [
                     { "$id": "default", "fillColor": { "solid": { "color": "#191919" } }, "transparency": 0 }
@@ -76,7 +81,11 @@
             "Minimal": { "grid": [{ "gridHorizontalColor": { "solid": { "color": "#2b2b2b" } } }] }
         },
         "slicer": {
-            "*": { "background": [{ "show": false }], "border": [{ "show": false }] }
+            "*": {
+                "background": [{ "show": false }],
+                "border": [{ "show": false }],
+                "header": [{ "textSize": 10 }]
+            }
         },
         "textbox": {
             "*": { "background": [{ "show": false }], "border": [{ "show": false }] }

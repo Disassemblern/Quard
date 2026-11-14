@@ -559,6 +559,11 @@
             "fontSize": 12
           }
         ],
+        "subTitle": [
+          {
+            "show": false
+          }
+        ],
         "categoryAxis": [
           {
             "gridlineColor": {
@@ -631,6 +636,31 @@
             "$id": "default",
             "maxTiles": 6,
             "cellPadding": 16
+          }
+        ],
+        "label": [
+          {
+            "$id": "default",
+            "fontSize": 9
+          }
+        ],
+        "value": [
+          {
+            "$id": "default",
+            "fontSize": 20,
+            "labelDisplayUnits": 1
+          }
+        ],
+        "referenceLabelTitle": [
+          {
+            "$id": "default",
+            "titleFontSize": 9
+          }
+        ],
+        "referenceLabelValue": [
+          {
+            "$id": "default",
+            "valueFontSize": 9
           }
         ],
         "shapeCustomRectangle": [
@@ -758,6 +788,11 @@
         "border": [
           {
             "show": false
+          }
+        ],
+        "header": [
+          {
+            "textSize": 10
           }
         ]
       }

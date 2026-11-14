@@ -51,112 +51,112 @@ Each story lists its page, the KPIs it needs, and acceptance criteria that someo
 As anyone, I want the headline KPIs with their change from last month on one page, so that I see the state in ten seconds.
 
 - **Page:** Overview. **KPIs:** K01, K02, K03, K05, K07, K09, K04, K23 to K27.
-- Six cards show Run count, Model cost, Cost per run, Spend, Block rate and Incident rate.
-- With the date filter inside one month, each card shows its change from the same days one month earlier: in percent for counts and money, in percentage points for rates.
-- With a date filter longer than a month, the change is blank, not a misleading number.
-- Run count and Model cost for a month equal that month's row in the "By month" DAX query.
+- [ ] Six cards show Run count, Model cost, Cost per run, Spend, Block rate and Incident rate.
+- [ ] With the date filter inside one month, each card shows its change from the same days one month earlier: in percent for counts and money, in percentage points for rates.
+- [ ] With a date filter longer than a month, the change is blank, not a misleading number.
+- [ ] Run count and Model cost for a month equal that month's row in the "By month" DAX query.
 
 ### SEC-1. Guard rules ready to block
 
 As a security lead, I want block and would-block counts per guard rule, so that I can switch quiet observe rules to block.
 
 - **Page:** Security. **KPIs:** K07, K08, with Blocks and Would blocks.
-- A table has one row per guard rule, with Blocks, Would blocks and Would-block rate as columns.
-- It is sorted by Would blocks, highest first.
-- The date and agent filters change it.
-- With no filter, its Blocks total equals Blocks in the "Totals" DAX query.
+- [ ] A table has one row per guard rule, with Blocks, Would blocks and Would-block rate as columns.
+- [ ] It is sorted by Would blocks, highest first.
+- [ ] The date and agent filters change it.
+- [ ] With no filter, its Blocks total equals Blocks in the "Totals" DAX query.
 
 ### SEC-2. Where attacks come in
 
 As a security lead, I want incidents by category, entry origin and entry agent over time, so that I know where attacks come in.
 
 - **Page:** Security. **KPIs:** K09, K10, with Incident count.
-- Incident count by category, where incidents without a verdict yet show as "unknown".
-- Incident count by entry origin kind, such as web or email.
-- Per agent, Incidents by entry agent next to Incident count (by the agent that did the damage).
-- The date filter changes all three, by the day each incident opened.
+- [ ] Incident count by category, where incidents without a verdict yet show as "unknown".
+- [ ] Incident count by entry origin kind, such as web or email.
+- [ ] Per agent, Incidents by entry agent next to Incident count (by the agent that did the damage).
+- [ ] The date filter changes all three, by the day each incident opened.
 
 ### SEC-3. Agents that act on untrusted content
 
 As a security lead, I want the share of tool calls made under untrusted influence, per agent, so that I know which agents read risky content.
 
 - **Page:** Security. **KPIs:** K11.
-- Influenced share for the whole filter.
-- Influenced share per agent, one row per agent, highest first.
-- A tooltip says that influenced means "read untrusted content earlier in the run", not "did harm".
+- [ ] Influenced share for the whole filter.
+- [ ] Influenced share per agent, one row per agent, highest first.
+- [ ] A tooltip says that influenced means "read untrusted content earlier in the run", not "did harm".
 
 ### ENG-1. Where to optimize cost first
 
 As an engineering manager, I want agents ranked by model cost, with cost per run, so that I know where to optimize first.
 
 - **Page:** Engineering. **KPIs:** K02, K03, K14, K12, K20.
-- One bar per agent shows Cost per run, labeled with its Agent cost rank.
-- Rank 1 is the agent with the highest Model cost in the current filter; equal costs share a rank.
-- Each agent's tooltip shows its Failure rate and Avg steps per run, the usual reasons a run costs more.
-- The date and agent filters change both the values and the ranks.
+- [ ] One bar per agent shows Cost per run, labeled with its Agent cost rank.
+- [ ] Rank 1 is the agent with the highest Model cost in the current filter; equal costs share a rank.
+- [ ] Each agent's tooltip shows its Failure rate and Avg steps per run, the usual reasons a run costs more.
+- [ ] The date and agent filters change both the values and the ranks.
 
 ### ENG-2. Unreliable models
 
 As an engineering manager, I want latency p95 and failure rate per model, so that I can spot unreliable models.
 
 - **Page:** Engineering. **KPIs:** K13, K18, with Model call count.
-- A table has one row per model, with Model call count, Latency p95 ms and Model call error rate.
-- Each model row shows its own values, not the same number on every row.
-- The date filter changes the table.
+- [ ] A table has one row per model, with Model call count, Latency p95 ms and Model call error rate.
+- [ ] Each model row shows its own values, not the same number on every row.
+- [ ] The date filter changes the table.
 
 ### ENG-3. Effect of model changes
 
 As an engineering manager, I want the model mix and cached token share by month, so that I can see the effect of model changes.
 
 - **Page:** Engineering. **KPIs:** K02, K19.
-- Model cost by month, stacked by model, so a model change shows as a change in the mix.
-- Cached token share by month, and per model.
+- [ ] Model cost by month, stacked by model, so a model change shows as a change in the mix.
+- [ ] Cached token share by month, and per model.
 
 ### FIN-1. Monthly AI cost
 
 As finance, I want monthly Total AI cost with the change from last month, so that I can track the budget.
 
 - **Page:** Finance. **KPIs:** K06, K28, K04.
-- A line chart shows Total AI cost by month.
-- Each month's tooltip shows Total AI cost MoM %.
-- For every month, Total AI cost equals Model cost plus Spend.
+- [ ] A line chart shows Total AI cost by month.
+- [ ] Each month's tooltip shows Total AI cost MoM %.
+- [ ] For every month, Total AI cost equals Model cost plus Spend.
 
 ### FIN-2. Payments to dispute
 
 As finance, I want spend by host and payee and the paid-not-delivered payments, so that I can dispute them.
 
 - **Page:** Finance. **KPIs:** K05, K15.
-- Spend by host and Spend by payee, highest first.
-- Cards show Paid not delivered and Paid not delivered USD.
-- A table lists each paid-not-delivered payment with its date, host, payee, USD value and run ID, so it can be found in Quard.
+- [ ] Spend by host and Spend by payee, highest first.
+- [ ] Cards show Paid not delivered and Paid not delivered USD.
+- [ ] A table lists each paid-not-delivered payment with its date, host, payee, USD value and run ID, so it can be found in Quard.
 
 ### FIN-3. How complete the cost is
 
 As finance, I want to know how much cost is unknown, so that I know how complete the numbers are.
 
 - **Page:** Finance. **KPIs:** K16.
-- A card shows Cost coverage as a percent of runs.
-- The date and agent filters change it.
-- A tooltip says that runs with an unpriced model call still count in Run count, but their unpriced calls add nothing to Model cost.
+- [ ] A card shows Cost coverage as a percent of runs.
+- [ ] The date and agent filters change it.
+- [ ] A tooltip says that runs with an unpriced model call still count in Run count, but their unpriced calls add nothing to Model cost.
 
 ### OPS-1. Failing data checks
 
 As a platform operator, I want to see which data checks fail and by how much, so that I trust the report before I share it.
 
 - **Page:** Data quality. **KPIs:** K17.
-- A table has one row per check: check name, kind, failing, total, rate, threshold and passed.
-- Passed shows as an icon and a word, never by color alone.
-- The Failing checks card equals the number of rows where Passed is false.
-- The date and agent filters don't change the checks.
+- [ ] A table has one row per check: check name, kind, failing, total, rate, threshold and passed.
+- [ ] Passed shows as an icon and a word, never by color alone.
+- [ ] The Failing checks card equals the number of rows where Passed is false.
+- [ ] The date and agent filters don't change the checks.
 
 ### OPS-2. Report against database
 
 As a platform operator, I want the report's totals compared with the database, so that I know nothing was lost on the way.
 
 - **Page:** Data quality. **KPIs:** K21, K22.
-- Cards show Runs gap vs source and Cost gap vs source, both 0 on clean data.
-- The gaps stay the same with any date or agent filter.
-- The page shows when the data was last refreshed.
+- [ ] Cards show Runs gap vs source and Cost gap vs source, both 0 on clean data.
+- [ ] The gaps stay the same with any date or agent filter.
+- [ ] The page shows when the data was last refreshed.
 
 ## 4. KPI catalog
 

@@ -77,8 +77,8 @@ def model_fields() -> set[tuple[str, str]]:
     fields = set()
     for f in (PAGES.parents[2] / "Quard.SemanticModel" / "definition" / "tables").glob("*.tmdl"):
         text = f.read_text(encoding="utf-8")
-        table = re.search(rf"^table (?:{name})", text, re.M)
-        for m in re.finditer(rf"^\t(?:column|measure) (?:{name})", text, re.M):
+        table = re.search(rf"^table (?:{name})", text, re.MULTILINE)
+        for m in re.finditer(rf"^\t(?:column|measure) (?:{name})", text, re.MULTILINE):
             fields.add((table[1] or table[2], m[1] or m[2]))
     return fields
 

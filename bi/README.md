@@ -17,7 +17,7 @@ A star: 6 facts and 5 dimensions, in `powerbi/Quard.SemanticModel`.
 - No relationships between facts. Data checks and Control totals stand alone.
 - Agent plays three roles on Incidents. `Damage agent` is active; `Entry agent` and `Turning agent` are inactive, for USERELATIONSHIP in measures.
 - Date is the marked date table. Month, Weekday and Year-Month sort by their number columns.
-- Facts show only their categories. Ids, keys and raw numbers are hidden; measures show them. Payments shows Run ID and Pay to, for the Finance page's list of payments to dispute.
+- Facts import only the columns a visual, measure or relationship uses; the bi views keep the rest. Facts show only their categories. Keys and raw numbers are hidden; measures show them. Payments shows Run ID and Pay to, for the Finance page's list of payments to dispute.
 - Implicit measures are off. Measures live in `_Measures`.
 - Every table and visible column has a description, saved as a `///` line in its TMDL file.
 - Each KPI in [kpis.md](kpis.md) is a measure with the same name, its definition as the description, a format string and a display folder.
@@ -121,6 +121,51 @@ Paid, not delivered fails on purpose: the "Paid API fails after payment" scenari
 
 ## Performance
 
+Measured on the 14,289 demo runs, before and after the fixes. The exports are in [perf/before](perf/before) and [perf/after](perf/after), and [perf/summary.py](perf/summary.py) turns them into this table:
+
+```sh
+uv run --directory bi python perf/summary.py
+```
+
+| Metric | Before | After | Change |
+| --- | --- | --- | --- |
+| Model size (MB) | 82.0 | 37.9 | -54% |
+| Hidden auto date tables | 8 | 0 | -100% |
+| Largest column (MB) | 10.0 (Guard decisions[Event ID]) | 1.1 (Payments[Run ID]) | -89% |
+| Full refresh (s) | 3.43 | 2.11 | -38% |
+| Overview: DAX query total (ms) | 45 | 42 | -7% |
+| Overview: slowest visual (ms) | 138 (Card) | 130 (Card) | -6% |
+| Security: DAX query total (ms) | 72 | 62 | -14% |
+| Security: slowest visual (ms) | 199 (Guard rules: blocks and would-blocks) | 175 (Guard rules: blocks and would-blocks) | -12% |
+| Engineering: DAX query total (ms) | 77 | 80 | +4% |
+| Engineering: slowest visual (ms) | 183 (Models) | 182 (Models) | -1% |
+| Finance: DAX query total (ms) | 49 | 59 | +20% |
+| Finance: slowest visual (ms) | 175 (Card) | 182 (Paid, not delivered) | +4% |
+| Data quality: DAX query total (ms) | 23 | 18 | -22% |
+| Data quality: slowest visual (ms) | 149 (Data checks) | 99 (Data checks) | -34% |
+
+How it was measured:
+
+- **Visuals:** Performance Analyzer, 3 refreshes of each page, the median for each visual. "DAX query total" adds up the visuals' DAX query times; "slowest visual" is the largest total time.
+- **Model:** VertiPaq Analyzer statistics, exported with DAX Studio's `dscmd vpax`. They hold sizes, not data rows.
+- **Refresh:** three full refreshes through the Tabular Object Model, timed in code, after one warm-up refresh. The first refresh after opening Power BI takes 13 to 17 s while Postgres and Power Query start up.
+
+The fixes:
+
+1. **Auto date/time off: 82.0 to 81.3 MB.** It built a hidden date table and relationship for each date column. The marked Date table already does that job, so they were dead weight, and the cause of most BPA warnings.
+2. **Only the columns the report uses: 81.3 to 37.9 MB, refresh 3.43 to 2.11 s.** Each fact query now ends in `Table.SelectColumns`, which folds into the SQL `SELECT`, so Postgres sends less and Power BI compresses less. 34 hidden columns went: ids, full timestamps and unused flags. Ids and timestamps are nearly unique per row, so they compress badly: Guard decisions[Event ID] alone was 10 MB. BPA's "Remove unnecessary columns" rule listed the same columns. The `Totals` query still matches `bi.control_totals`.
+3. **Dates as Date:** already done in B7. Only the timestamps were date and time, and fix 2 removed them.
+4. **Calculated columns:** the only ones were in the auto date tables, so fix 1 removed them.
+5. **Single direction:** all 18 relationships already were.
+6. **Slowest query, kept as it is.** The Models table on Engineering has the slowest DAX query. DAX Studio's Server Timings showed 17 ms, all in the formula engine, with 3 storage engine queries. `Latency p95 ms` uses `PERCENTILE.INC`, which sorts every call's duration; the storage engine can only add and count, so that work can't move down. The other measures already filter single columns and use plain sums. Computing p95 in SQL would stop it reacting to the slicers, which isn't worth it for 17 ms.
+7. **Fewer visuals: not done.** Each page has at most 9 visuals, and each answers a user story.
+
+What the numbers say:
+
+- **The model got smaller, and the visuals stayed about the same.** DAX queries take 5 to 30 ms each; most of a visual's time is drawing it. On a model this small, the visual changes of up to ±20% are noise between runs.
+- **Text columns cost at least 1 MB each.** VertiPaq gives every text column a dictionary of about 1 MB, even with 5 values. Dictionaries are 37.5 of the 37.9 MB left, across 39 text columns. Most are the text keys Agent, Tool, Model and Guard rule. Whole-number keys would shrink the model further: see Next.
+- **Money as whole micro-dollars helps here too** (Key decision 10). Whole numbers compress better than decimals, and every cost column stays a 64-bit integer.
+
 ## Findings
 
 ### Back-dating
@@ -172,7 +217,7 @@ The report imports the `bi` views in Import mode as `bi_reader`. It has 13 table
 
 - **Where things are saved.** The parameters and helpers are in `definition/expressions.tmdl`, and each table's M code is in its own file under `definition/tables`. The sign-in is not in any saved file.
 - **Folding was checked on a test query.** View Native Query is greyed out on a query that calls `GetView`. A test query with the same steps written out showed the project filter as a SQL `WHERE`, so Postgres does the filtering.
-- **Auto date/time made 14 hidden tables.** Power BI builds a `LocalDateTable_*` table and a relationship for each date column. They are saved in Git for now, and B11 turns the option off and measures the difference.
+- **Auto date/time made 14 hidden tables.** Power BI builds a `LocalDateTable_*` table and a relationship for each date column. B11 turned the option off: see Performance.
 - **No real relationships yet.** The only relationships in `relationships.tmdl` link date columns to those hidden tables. B8 adds the star schema.
 - **The Date table has 246 days.** It runs from 30 April, the first run's day, to 31 December 2026. The end date follows the current year, so it grows at the next refresh after New Year.
 - **Table names must match exactly.** DAX in B9 writes names like `'Model calls'`, so a capital in the wrong place breaks a measure. The names are `Guard decisions`, `Model calls`, `Tool calls`, `Data checks` and `Control totals`.
@@ -187,3 +232,5 @@ The report imports the `bi` views in Import mode as `bi_reader`. It has 13 table
 - **BPA warns on 15 format strings.** Microsoft's rules want `#,0.0%;-#,0.0%;#,0.0%` for percentages. MoM measures keep a `+` sign, which a card needs to show growth, and a rate never reaches 1,000%, so they stay warnings. The rest are false alarms. Last refresh is a date, not a whole number. Check passed and Check result are hidden helpers for the Data checks table: they look unused because BPA can't see the report, and Check result is text, not a whole number.
 
 ## Next
+
+- **Whole-number keys.** Agent, Tool, Model and Guard rule join on text, and each text column costs about 1 MB. Integer keys in the bi views would shrink the model further.

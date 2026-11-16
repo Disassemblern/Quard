@@ -2,28 +2,6 @@
 table Incidents
 	lineageTag: 1403ed23-0ac2-4ef4-aa54-3c86d7ee3791
 
-	column 'Incident ID'
-		dataType: string
-		isHidden
-		lineageTag: b11b092f-6828-42f6-a668-490b6661103a
-		summarizeBy: none
-		sourceColumn: Incident ID
-
-		changedProperty = IsHidden
-
-		annotation SummarizationSetBy = Automatic
-
-	column 'Run ID'
-		dataType: string
-		isHidden
-		lineageTag: 9a3cd070-36db-4d6f-a71f-9e1bf2e466b7
-		summarizeBy: none
-		sourceColumn: Run ID
-
-		changedProperty = IsHidden
-
-		annotation SummarizationSetBy = Automatic
-
 	column 'Opened date'
 		dataType: dateTime
 		isHidden
@@ -80,17 +58,6 @@ table Incidents
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'Entry origin'
-		dataType: string
-		isHidden
-		lineageTag: b39cf980-bffc-4b59-8d04-450bed43d803
-		summarizeBy: none
-		sourceColumn: Entry origin
-
-		changedProperty = IsHidden
-
-		annotation SummarizationSetBy = Automatic
-
 	/// Where the risky content came in, such as web or email.
 	column 'Entry origin kind'
 		dataType: string
@@ -100,74 +67,17 @@ table Incidents
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'Entry trust'
-		dataType: string
-		isHidden
-		lineageTag: 39b4ab64-3b6a-4e5e-8fc8-963348ecc2ab
-		summarizeBy: none
-		sourceColumn: Entry trust
-
-		changedProperty = IsHidden
-
-		annotation SummarizationSetBy = Automatic
-
-	column 'Damage tool'
-		dataType: string
-		isHidden
-		lineageTag: ed1d9910-ce62-4297-aba5-d9fa16e21a5a
-		summarizeBy: none
-		sourceColumn: Damage tool
-
-		changedProperty = IsHidden
-
-		annotation SummarizationSetBy = Automatic
-
-	column 'Find state'
-		dataType: string
-		isHidden
-		lineageTag: 897fd97c-973d-449c-ba76-c24009e71bbb
-		summarizeBy: none
-		sourceColumn: Find state
-
-		changedProperty = IsHidden
-
-		annotation SummarizationSetBy = Automatic
-
-	column 'Replay state'
-		dataType: string
-		isHidden
-		lineageTag: 5fa5b2c6-498d-403e-8ba8-a59e5a057b61
-		summarizeBy: none
-		sourceColumn: Replay state
-
-		changedProperty = IsHidden
-
-		annotation SummarizationSetBy = Automatic
-
-	column 'Spent micro USD'
-		dataType: int64
-		isHidden
-		formatString: 0
-		lineageTag: 33e32bc6-0e59-4ba1-ad26-1f7658b97e2e
-		summarizeBy: sum
-		sourceColumn: Spent micro USD
-
-		changedProperty = IsHidden
-
-		annotation SummarizationSetBy = Automatic
-
 	partition Incidents = m
 		mode: import
 		source =
 				let
 				    Source = GetView("fact_incident"),
-				    Typed = Table.TransformColumnTypes(Source, {
-				        {"incident_id", type text}, {"run_id", type text}, {"opened_date", type date},
-				        {"category", type text}, {"damage_agent", type text}, {"entry_agent", type text},
-				        {"turning_agent", type text}, {"entry_origin", type text}, {"entry_origin_kind", type text},
-				        {"entry_trust", type text}, {"damage_tool", type text}, {"find_state", type text},
-				        {"replay_state", type text}, {"spent_micro_usd", Int64.Type}
-				    }),
+				    Types = {
+				        {"opened_date", type date}, {"category", type text}, {"damage_agent", type text},
+				        {"entry_agent", type text}, {"turning_agent", type text}, {"entry_origin_kind", type text}
+				    },
+				    Kept = Table.SelectColumns(Source, List.Transform(Types, each _{0})),
+				    Typed = Table.TransformColumnTypes(Kept, Types),
 				    Named = Table.TransformColumnNames(Typed, ColumnName)
 				in
 				    Named

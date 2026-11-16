@@ -27,25 +27,8 @@
                 }
               },
               "queryRef": "Date.Year-Month",
-              "nativeQueryRef": "Year-Month"
-            }
-          ]
-        },
-        "Y": {
-          "projections": [
-            {
-              "field": {
-                "Measure": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "_Measures"
-                    }
-                  },
-                  "Property": "Total AI cost"
-                }
-              },
-              "queryRef": "_Measures.Total AI cost",
-              "nativeQueryRef": "Total AI cost"
+              "nativeQueryRef": "Year-Month",
+              "active": true
             }
           ]
         },
@@ -66,6 +49,24 @@
               "nativeQueryRef": "Total AI cost MoM %"
             }
           ]
+        },
+        "Y": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "Total AI cost"
+                }
+              },
+              "queryRef": "_Measures.Total AI cost",
+              "nativeQueryRef": "Total AI cost"
+            }
+          ]
         }
       },
       "sortDefinition": {
@@ -83,8 +84,7 @@
             },
             "direction": "Ascending"
           }
-        ],
-        "isDefaultSort": false
+        ]
       }
     },
     "visualContainerObjects": {

@@ -27,25 +27,8 @@
                 }
               },
               "queryRef": "Agent.Agent",
-              "nativeQueryRef": "Agent"
-            }
-          ]
-        },
-        "Y": {
-          "projections": [
-            {
-              "field": {
-                "Measure": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "_Measures"
-                    }
-                  },
-                  "Property": "Cost per run"
-                }
-              },
-              "queryRef": "_Measures.Cost per run",
-              "nativeQueryRef": "Cost per run"
+              "nativeQueryRef": "Agent",
+              "active": true
             }
           ]
         },
@@ -80,6 +63,24 @@
               "nativeQueryRef": "Avg steps per run"
             }
           ]
+        },
+        "Y": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "Cost per run"
+                }
+              },
+              "queryRef": "_Measures.Cost per run",
+              "nativeQueryRef": "Cost per run"
+            }
+          ]
         }
       },
       "sortDefinition": {
@@ -97,8 +98,7 @@
             },
             "direction": "Descending"
           }
-        ],
-        "isDefaultSort": false
+        ]
       }
     },
     "objects": {

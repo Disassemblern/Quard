@@ -90,11 +90,6 @@ table 'Control totals'
 		summarizeBy: none
 		sourceColumn: Refreshed at
 
-		variation Variation
-			isDefault
-			relationship: 8414b8e5-de96-4dd1-a77e-d498f430f944
-			defaultHierarchy: LocalDateTable_1adbf59e-8962-4e7e-a445-23d44dae814c.'Date Hierarchy'
-
 		annotation SummarizationSetBy = Automatic
 
 	partition 'Control totals' = m

@@ -27,25 +27,8 @@
                 }
               },
               "queryRef": "Agent.Agent",
-              "nativeQueryRef": "Agent"
-            }
-          ]
-        },
-        "Y": {
-          "projections": [
-            {
-              "field": {
-                "Measure": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "_Measures"
-                    }
-                  },
-                  "Property": "Model cost"
-                }
-              },
-              "queryRef": "_Measures.Model cost",
-              "nativeQueryRef": "Model cost"
+              "nativeQueryRef": "Agent",
+              "active": true
             }
           ]
         },
@@ -66,6 +49,24 @@
               "nativeQueryRef": "Agent cost rank"
             }
           ]
+        },
+        "Y": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "Model cost"
+                }
+              },
+              "queryRef": "_Measures.Model cost",
+              "nativeQueryRef": "Model cost"
+            }
+          ]
         }
       },
       "sortDefinition": {
@@ -83,8 +84,7 @@
             },
             "direction": "Descending"
           }
-        ],
-        "isDefaultSort": false
+        ]
       }
     },
     "visualContainerObjects": {

@@ -27,25 +27,8 @@
                 }
               },
               "queryRef": "Date.Year-Month",
-              "nativeQueryRef": "Year-Month"
-            }
-          ]
-        },
-        "Y": {
-          "projections": [
-            {
-              "field": {
-                "Measure": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "_Measures"
-                    }
-                  },
-                  "Property": "Model cost"
-                }
-              },
-              "queryRef": "_Measures.Model cost",
-              "nativeQueryRef": "Model cost"
+              "nativeQueryRef": "Year-Month",
+              "active": true
             }
           ]
         },
@@ -66,6 +49,24 @@
               "nativeQueryRef": "Model"
             }
           ]
+        },
+        "Y": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "Model cost"
+                }
+              },
+              "queryRef": "_Measures.Model cost",
+              "nativeQueryRef": "Model cost"
+            }
+          ]
         }
       },
       "sortDefinition": {
@@ -83,8 +84,7 @@
             },
             "direction": "Ascending"
           }
-        ],
-        "isDefaultSort": false
+        ]
       }
     },
     "visualContainerObjects": {

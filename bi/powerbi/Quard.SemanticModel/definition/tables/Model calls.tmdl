@@ -2,28 +2,6 @@
 table 'Model calls'
 	lineageTag: e2b03c8b-6868-40bd-bf5f-d56ab7f734e9
 
-	column 'Run ID'
-		dataType: string
-		isHidden
-		lineageTag: 9e287aa2-b85e-40f5-b9c2-9244f73debea
-		summarizeBy: none
-		sourceColumn: Run ID
-
-		changedProperty = IsHidden
-
-		annotation SummarizationSetBy = Automatic
-
-	column 'Step ID'
-		dataType: string
-		isHidden
-		lineageTag: 40254171-42c2-441a-9ac6-c5f131fbdcb6
-		summarizeBy: none
-		sourceColumn: Step ID
-
-		changedProperty = IsHidden
-
-		annotation SummarizationSetBy = Automatic
-
 	column Agent
 		dataType: string
 		isHidden
@@ -60,23 +38,6 @@ table 'Model calls'
 
 		annotation UnderlyingDateTimeDataType = Date
 
-	column 'Called at'
-		dataType: dateTime
-		isHidden
-		formatString: General Date
-		lineageTag: e25e2ca7-ad50-47b7-969d-61ec34845501
-		summarizeBy: none
-		sourceColumn: Called at
-
-		variation Variation
-			isDefault
-			relationship: ac91f3fa-e2a8-4439-a93b-98e775778151
-			defaultHierarchy: LocalDateTable_ef497a0b-e43a-47eb-954d-22e92459f00d.'Date Hierarchy'
-
-		changedProperty = IsHidden
-
-		annotation SummarizationSetBy = Automatic
-
 	/// Status of the model call.
 	column Status
 		dataType: string
@@ -105,18 +66,6 @@ table 'Model calls'
 		lineageTag: 59f5728a-068d-4d7e-92c1-b3a8c4f1c511
 		summarizeBy: sum
 		sourceColumn: Cached tokens
-
-		changedProperty = IsHidden
-
-		annotation SummarizationSetBy = Automatic
-
-	column 'Output tokens'
-		dataType: int64
-		isHidden
-		formatString: 0
-		lineageTag: 0a963a31-746b-4720-9496-5a8e45484c0b
-		summarizeBy: sum
-		sourceColumn: Output tokens
 
 		changedProperty = IsHidden
 
@@ -151,12 +100,13 @@ table 'Model calls'
 		source =
 				let
 				    Source = GetView("fact_model_call"),
-				    Typed = Table.TransformColumnTypes(Source, {
-				        {"run_id", type text}, {"step_id", type text}, {"agent", type text}, {"model", type text},
-				        {"call_date", type date}, {"called_at", type datetimezone}, {"status", type text},
-				        {"input_tokens", Int64.Type}, {"cached_tokens", Int64.Type}, {"output_tokens", Int64.Type},
+				    Types = {
+				        {"agent", type text}, {"model", type text}, {"call_date", type date},
+				        {"status", type text}, {"input_tokens", Int64.Type}, {"cached_tokens", Int64.Type},
 				        {"cost_micro_usd", Int64.Type}, {"duration_ms", Int64.Type}
-				    }),
+				    },
+				    Kept = Table.SelectColumns(Source, List.Transform(Types, each _{0})),
+				    Typed = Table.TransformColumnTypes(Kept, Types),
 				    Named = Table.TransformColumnNames(Typed, ColumnName)
 				in
 				    Named

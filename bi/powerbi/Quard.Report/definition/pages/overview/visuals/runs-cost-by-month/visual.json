@@ -27,7 +27,8 @@
                 }
               },
               "queryRef": "Date.Year-Month",
-              "nativeQueryRef": "Year-Month"
+              "nativeQueryRef": "Year-Month",
+              "active": true
             }
           ]
         },
@@ -83,8 +84,7 @@
             },
             "direction": "Ascending"
           }
-        ],
-        "isDefaultSort": false
+        ]
       }
     },
     "visualContainerObjects": {

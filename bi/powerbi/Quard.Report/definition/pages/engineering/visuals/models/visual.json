@@ -103,8 +103,7 @@
             },
             "direction": "Descending"
           }
-        ],
-        "isDefaultSort": false
+        ]
       }
     },
     "objects": {
@@ -203,5 +202,79 @@
       ]
     },
     "drillFilterOtherVisuals": true
+  },
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "4bc1a7217be03451cb77",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "Model"
+              }
+            },
+            "Property": "Model"
+          }
+        },
+        "type": "Categorical"
+      },
+      {
+        "name": "579c1afb00a926955e79",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "_Measures"
+              }
+            },
+            "Property": "Model call count"
+          }
+        },
+        "type": "Advanced"
+      },
+      {
+        "name": "58de68330185d0a0376b",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "_Measures"
+              }
+            },
+            "Property": "Latency p95 ms"
+          }
+        },
+        "type": "Advanced"
+      },
+      {
+        "name": "9186fead24596409d9e4",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "_Measures"
+              }
+            },
+            "Property": "Model call error rate"
+          }
+        },
+        "type": "Advanced"
+      },
+      {
+        "name": "11962b2f14880a32ad78",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "_Measures"
+              }
+            },
+            "Property": "Cached token share"
+          }
+        },
+        "type": "Advanced"
+      }
+    ]
   }
 }

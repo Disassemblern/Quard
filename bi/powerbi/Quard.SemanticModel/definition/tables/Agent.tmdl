@@ -19,11 +19,6 @@ table Agent
 		summarizeBy: none
 		sourceColumn: First seen date
 
-		variation Variation
-			isDefault
-			relationship: e25f16e0-616b-40ca-be56-27fe8c89c5f1
-			defaultHierarchy: LocalDateTable_9c0789ee-55d4-4df3-bf43-41b48a405fe1.'Date Hierarchy'
-
 		annotation SummarizationSetBy = Automatic
 
 		annotation UnderlyingDateTimeDataType = Date

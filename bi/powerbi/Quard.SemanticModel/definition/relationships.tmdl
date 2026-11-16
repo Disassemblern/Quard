@@ -1,38 +1,3 @@
-relationship 408cc95a-473e-49df-8705-2846a2fa528e
-	joinOnDateBehavior: datePartOnly
-	fromColumn: Runs.'Started at'
-	toColumn: LocalDateTable_e88166f9-5da1-42c8-a411-c4a3c8b2509b.Date
-
-relationship ac91f3fa-e2a8-4439-a93b-98e775778151
-	joinOnDateBehavior: datePartOnly
-	fromColumn: 'Model calls'.'Called at'
-	toColumn: LocalDateTable_ef497a0b-e43a-47eb-954d-22e92459f00d.Date
-
-relationship 7c0032a3-624c-4f63-a24e-79b335d616d4
-	joinOnDateBehavior: datePartOnly
-	fromColumn: 'Tool calls'.'Called at'
-	toColumn: LocalDateTable_481ec9f6-3a1e-414a-98ae-95ddcbf5a8f4.Date
-
-relationship 8c7ce587-9d5a-4b16-9a34-96ab2a8e07dc
-	joinOnDateBehavior: datePartOnly
-	fromColumn: 'Guard decisions'.'Decided at'
-	toColumn: LocalDateTable_7c7df8d4-fa3b-4127-b1c0-5b9c2d251f76.Date
-
-relationship 9375f4b1-ad28-4711-85c9-f79b7d97fde9
-	joinOnDateBehavior: datePartOnly
-	fromColumn: Payments.'Paid at'
-	toColumn: LocalDateTable_fcbb2f4d-c901-4a16-8c71-12e3ceac72b2.Date
-
-relationship e25f16e0-616b-40ca-be56-27fe8c89c5f1
-	joinOnDateBehavior: datePartOnly
-	fromColumn: Agent.'First seen date'
-	toColumn: LocalDateTable_9c0789ee-55d4-4df3-bf43-41b48a405fe1.Date
-
-relationship 8414b8e5-de96-4dd1-a77e-d498f430f944
-	joinOnDateBehavior: datePartOnly
-	fromColumn: 'Control totals'.'Refreshed at'
-	toColumn: LocalDateTable_1adbf59e-8962-4e7e-a445-23d44dae814c.Date
-
 relationship AutoDetected_b1885c0e-ab25-46fe-aa7e-e60ffb69b489
 	fromColumn: Runs.Agent
 	toColumn: Agent.Agent

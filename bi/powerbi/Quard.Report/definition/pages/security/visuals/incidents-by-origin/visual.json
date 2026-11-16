@@ -27,7 +27,8 @@
                 }
               },
               "queryRef": "Incidents.Entry origin kind",
-              "nativeQueryRef": "Entry origin kind"
+              "nativeQueryRef": "Entry origin kind",
+              "active": true
             }
           ]
         },
@@ -65,8 +66,7 @@
             },
             "direction": "Descending"
           }
-        ],
-        "isDefaultSort": false
+        ]
       }
     },
     "visualContainerObjects": {

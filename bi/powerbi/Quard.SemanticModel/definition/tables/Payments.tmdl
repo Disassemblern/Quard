@@ -2,17 +2,6 @@
 table Payments
 	lineageTag: 240ad45e-6c4a-4061-8c7c-0ba9320955b1
 
-	column 'Event ID'
-		dataType: string
-		isHidden
-		lineageTag: 71f28a79-b643-4a30-91b4-f91eefe20d72
-		summarizeBy: none
-		sourceColumn: Event ID
-
-		changedProperty = IsHidden
-
-		annotation SummarizationSetBy = Automatic
-
 	/// Run the payment was made in, to find it in Quard.
 	column 'Run ID'
 		dataType: string
@@ -47,23 +36,6 @@ table Payments
 
 		annotation UnderlyingDateTimeDataType = Date
 
-	column 'Paid at'
-		dataType: dateTime
-		isHidden
-		formatString: General Date
-		lineageTag: d0c828b2-179f-40a0-abcc-02e8ca9b7b17
-		summarizeBy: none
-		sourceColumn: Paid at
-
-		variation Variation
-			isDefault
-			relationship: 9375f4b1-ad28-4711-85c9-f79b7d97fde9
-			defaultHierarchy: LocalDateTable_fcbb2f4d-c901-4a16-8c71-12e3ceac72b2.'Date Hierarchy'
-
-		changedProperty = IsHidden
-
-		annotation SummarizationSetBy = Automatic
-
 	/// How far the payment got: challenged, refused, signed, settled or failed.
 	column Stage
 		dataType: string
@@ -91,17 +63,6 @@ table Payments
 
 		annotation SummarizationSetBy = Automatic
 
-	column Asset
-		dataType: string
-		isHidden
-		lineageTag: 8bd026f3-9cf7-4cdd-b6a5-ec0afd7a8722
-		summarizeBy: none
-		sourceColumn: Asset
-
-		changedProperty = IsHidden
-
-		annotation SummarizationSetBy = Automatic
-
 	/// Address the payment went to: the payee.
 	column 'Pay to'
 		dataType: string
@@ -118,17 +79,6 @@ table Payments
 		lineageTag: 87b0d5e1-896d-45c9-b347-b3da8a341cb8
 		summarizeBy: sum
 		sourceColumn: Value micro USD
-
-		changedProperty = IsHidden
-
-		annotation SummarizationSetBy = Automatic
-
-	column 'Amount atomic'
-		dataType: string
-		isHidden
-		lineageTag: 645b6dfa-2a0c-4b02-955f-65e20cf4432d
-		summarizeBy: none
-		sourceColumn: Amount atomic
 
 		changedProperty = IsHidden
 
@@ -151,12 +101,13 @@ table Payments
 		source =
 				let
 				    Source = GetView("fact_payment"),
-				    Typed = Table.TransformColumnTypes(Source, {
-				        {"event_id", type text}, {"run_id", type text}, {"agent", type text},
-				        {"payment_date", type date}, {"paid_at", type datetimezone}, {"stage", type text},
-				        {"host", type text}, {"network", type text}, {"asset", type text}, {"pay_to", type text},
-				        {"value_micro_usd", Int64.Type}, {"amount_atomic", type text}, {"delivered", type logical}
-				    }),
+				    Types = {
+				        {"run_id", type text}, {"agent", type text}, {"payment_date", type date},
+				        {"stage", type text}, {"host", type text}, {"network", type text}, {"pay_to", type text},
+				        {"value_micro_usd", Int64.Type}, {"delivered", type logical}
+				    },
+				    Kept = Table.SelectColumns(Source, List.Transform(Types, each _{0})),
+				    Typed = Table.TransformColumnTypes(Kept, Types),
 				    Named = Table.TransformColumnNames(Typed, ColumnName)
 				in
 				    Named

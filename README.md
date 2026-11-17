@@ -55,3 +55,4 @@ pnpm test
 - [PROJECT.md](PROJECT.md): how Quard works and every design decision
 - [sandbox/README.md](sandbox/README.md): more runnable examples, one per feature
 - [docs/content](docs/content): the user guide (`pnpm --filter docs dev`, then http://localhost:3001)
+- [bi/README.md](bi/README.md): a Power BI report on Quard's data, with its star schema, data checks and findings

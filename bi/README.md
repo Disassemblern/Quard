@@ -4,7 +4,74 @@ A Power BI layer on top of Quard's Postgres data.
 
 ## What this is
 
+Quard guards AI agents: it records every model call, tool call and payment an agent makes, blocks the dangerous ones, and opens an incident when something gets through. This folder turns that data into a Power BI report for four people: a security lead, an engineering manager, finance, and the platform operator who checks the data. Each has user stories and KPIs in [kpis.md](kpis.md), and each has a page. The data is not made up row by row: 14,289 agent runs went through the real SDK, webhook and worker, with Qwen3-8B on a rented GPU answering as the models, and SQL then spread them over six months. The report can be checked without opening it: every total is reconciled against the database, and the model and report files are text in Git, checked in CI.
+
+The [PDF export](img/quard-bi.pdf) shows every page.
+
+## How it flows
+
+```text
+Agents (SDK) -> webhook -> Postgres (app tables)
+                              |
+                         bi views (sql/*.sql): star schema, data checks, control totals
+                              |
+                         Power Query: imports the views as bi_reader, one project
+                              |
+                         semantic model (TMDL): relationships, 39 measures
+                              |
+                         report (PBIR): five pages
+```
+
+- **SQL** builds a star schema as views in a `bi` schema ([sql](sql)). The app never depends on them, so they can change freely.
+- **Power Query** imports the views in Import mode, filtered to one project, and folds that filter into SQL.
+- **The model** links 5 dimensions to 6 facts and holds every KPI as a measure.
+- **CI** ([bi.yml](../.github/workflows/bi.yml)) runs on every push: pytest builds the views in a fresh database and plants a defect for each data check; the Best Practice Analyzer checks the model; the report tests check every page against the standards below.
+
 ## How to run
+
+You need Docker, Node 24 with pnpm, [uv](https://docs.astral.sh/uv/), and Power BI Desktop on Windows.
+
+1. Start Postgres on port 5433 and apply the app's migrations:
+
+    ```sh
+    cp bi/.env.example bi/.env    # then set BI_READER_PASSWORD
+    docker compose -f bi/compose.yaml up -d
+    node --env-file=bi/.env db/main.ts
+    uv sync --directory bi
+    ```
+
+2. Load demo data. Either restore a dump made by the generator ([sandbox/seed](../sandbox/seed)), which is too big for Git:
+
+    ```sh
+    docker compose -f bi/compose.yaml cp bi/data/quard-demo.dump postgres:/tmp/quard-demo.dump
+    docker compose -f bi/compose.yaml exec postgres sh -c 'psql -U quard -d postgres -c "DROP DATABASE quard WITH (FORCE)" && psql -U quard -d postgres -c "CREATE DATABASE quard OWNER quard" && pg_restore -U quard -d quard --no-owner /tmp/quard-demo.dump'
+    ```
+
+    Or make new runs. The generator needs a Chat Completions server for Qwen3-8B on port 30000 (sglang on a GPU), and the webhook, control and worker running with `bi/.env`:
+
+    ```sh
+    node --env-file=bi/.env db/cli/setup-main.ts --project "Acme demo"   # prints the agent key for bi/.env
+    node --env-file=bi/.env sandbox/seed/main.ts --runs 3000 --concurrency 32
+    uv run --directory bi python apply.py seed/backdate.sql             # spreads the runs over six months
+    ```
+
+3. Build the `bi` views and the `bi_reader` role:
+
+    ```sh
+    uv run --directory bi python apply.py
+    ```
+
+4. Open `powerbi/Quard.pbip` in Power BI Desktop. In Home > Transform data > Edit parameters, set `ProjectId` to your project's id. Sign in to the database as `bi_reader` with the password from `bi/.env`, then Refresh.
+
+5. Run the checks:
+
+    ```sh
+    uv run --directory bi pytest                       # SQL, data checks and report tests
+    uv run --directory bi pytest -m live --no-cov -s   # data checks on the demo data
+    uv run --directory bi python perf/summary.py       # the performance table
+    ```
+
+    The Best Practice Analyzer command is under Standards.
 
 ## Model
 
@@ -38,6 +105,26 @@ Finance differs from its wireframe: the paid-not-delivered table is 8 columns wi
 | [Engineering](img/engineering.png) | ENG-1 to ENG-3 | Cost per run by agent with its rank, model cost by model, a models table, cached token share by month. |
 | [Finance](img/finance.png) | FIN-1 to FIN-3 | Total AI cost by month, paid-not-delivered payments, spend by host and by payee. |
 | [Data quality](img/data-quality.png) | OPS-1, OPS-2 | Every data check with a passed or failed icon and word. |
+
+### Overview
+
+![Overview page](img/overview.png)
+
+### Security
+
+![Security page](img/security.png)
+
+### Engineering
+
+![Engineering page](img/engineering.png)
+
+### Finance
+
+![Finance page](img/finance.png)
+
+### Data quality
+
+![Data quality page](img/data-quality.png)
 
 ## Standards
 
@@ -158,7 +245,7 @@ The fixes:
 4. **Calculated columns:** the only ones were in the auto date tables, so fix 1 removed them.
 5. **Single direction:** all 18 relationships already were.
 6. **Slowest query, kept as it is.** The Models table on Engineering has the slowest DAX query. DAX Studio's Server Timings showed 17 ms, all in the formula engine, with 3 storage engine queries. `Latency p95 ms` uses `PERCENTILE.INC`, which sorts every call's duration; the storage engine can only add and count, so that work can't move down. The other measures already filter single columns and use plain sums. Computing p95 in SQL would stop it reacting to the slicers, which isn't worth it for 17 ms.
-7. **Fewer visuals: not done.** Each page has at most 9 visuals, and each answers a user story.
+7. **Fewer visuals: not done.** Each page has at most 8 visuals and a title, and each visual answers a user story.
 
 What the numbers say:
 
@@ -167,6 +254,22 @@ What the numbers say:
 - **Money as whole micro-dollars helps here too** (Key decision 10). Whole numbers compress better than decimals, and every cost column stays a 64-bit integer.
 
 ## Findings
+
+What the demo data says. The scenario mix in the generator decides how often each attack happens, so the shares below describe this demo, not real traffic. The patterns, and the way the report finds them, carry over.
+
+1. **Email is the main way in.** 2,121 of 4,093 incidents (52%) started with content from an email, 552 (13%) from a web page, and 1,147 (28%) from another agent's handoff. Why it matters: the security lead gets the most from stricter handling of email content, such as a lower trust level for the email tool. Caveat: 273 incidents (7%) have no known origin yet, because the worker could not find the damaging call (see Reconciliation).
+
+2. **The support agent has an incident in almost half its runs.** 47.6% of its 3,945 runs, against 14 to 24% for billing, research and procurement. 1,466 of its incidents came in by email. Why it matters: support reads customer email all day, so it is the first agent to get fewer tools or stricter guards. Caveat: the forecaster has an incident in all 284 of its runs, but it only appears in the "paid link in a web page" attack scenario.
+
+3. **One agent and one model make most of the cost.** Billing runs on gpt-5.4-mini and makes 63% of the model cost ($5.27 of $8.36), with 41% of the runs. Research costs the most per run: $0.00117, 8 times support. Why it matters: the engineering manager should look at billing's prompts or model first. Caveat: Qwen3-8B answered every call, so costs use each label's price list, not real bills; caching is high (90 to 99.6% of input tokens) because the prompts repeat.
+
+4. **$2.67 paid for nothing.** 267 of 4,352 settled payments (6.1%) got no answer back, all to `quotes.example`, above the 2% threshold. Why it matters: finance has a ready list of payments to dispute, with run ids, on the Finance page. Caveat: the "Paid API fails after payment" scenario plants these on purpose.
+
+5. **2% of runs have no cost.** All 284 are the forecaster's, on `acme-ft-1`, a fine-tuned model with no price. Cost coverage is 98.0%, under the 5% unknown threshold, but the forecaster's cost is invisible. Why it matters: finance asks engineering to add a price, and the Cost coverage tooltip says why the number is incomplete. Caveat: one unpriced model in a demo; a real fleet would have more.
+
+## Build notes
+
+What came up while building each layer.
 
 ### Back-dating
 
@@ -233,4 +336,10 @@ The report imports the `bi` views in Import mode as `bi_reader`. It has 13 table
 
 ## Next
 
+- **Publish to the Power BI Service** with a gateway to the local database and a scheduled refresh, so people open a link instead of a file.
+- **Deploy from Git:** Fabric's Git integration can update a workspace from `bi/powerbi` on `main`.
+- **An alert** when the incident count jumps, with Power Automate on a pinned card.
+- **Incremental refresh** on the facts, by date. A full refresh takes 2 s today, but it grows with every run.
+- **Row-level security by team,** so each team sees only its own agents.
 - **Whole-number keys.** Agent, Tool, Model and Guard rule join on text, and each text column costs about 1 MB. Integer keys in the bi views would shrink the model further.
+- **An "Agent details" drill-through page,** and one calculation group in place of the month-over-month copies of each measure.
